@@ -92,6 +92,7 @@ class Home extends CI_Controller {
 	            {
 					$this->session->set_flashdata('response',$data['BaseName'].' was not updated.');
 	            }
+	            $baseForm = $baseID;
         	}
         	else
         	{
@@ -104,11 +105,11 @@ class Home extends CI_Controller {
 	            {
 					$this->session->set_flashdata('response',$data['BaseName'].' was not saved.');
 	            }
+	            $baseForm = $this->DictionaryModel->get_latestID('baseform','BaseFormID');
         	}
         }
 
-        $baseForm = $this->DictionaryModel->get_latestID('baseform','BaseFormID');
-        return redirect("home/BaseForm?baseForm={$baseForm}");
+        return redirect("home/BaseForm?baseForm={$baseForm}&inflection=0");
         //$this->load->view('wizard_test',$data);
 	}
 
