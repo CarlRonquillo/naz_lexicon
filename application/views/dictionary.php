@@ -5,7 +5,7 @@
 			<?php
 				if(isset($_GET['search']))
 				{
-					$searchValue=htmlentities($_GET['search']);
+					$searchValue= $_GET['search'];
 					$display = "block";
 					$display2 = "none";
 				}
