@@ -54,6 +54,17 @@ class Home extends CI_Controller {
 		$data['baseID'] = $baseID;
 		$data['first_TermID'] =  $this->DictionaryModel->get_first_termID($baseID);
 		$data['record'] =  $this->DictionaryModel->get_SingleTerm($termID);
+		$data['termNames'] = $this->DictionaryModel->get_TermNames();
+		$related_terms = $this->DictionaryModel->get_relatedTerms($termID);
+		$data['relatedTerms'] = "";
+		if(count($related_terms))
+		{
+			foreach($related_terms as $related)
+			{
+				$data['relatedTerms'] = $data['relatedTerms'].$related->TermName.',';
+			}
+		}
+
 		$this->load->view('add_term',$data);
 	}
 
@@ -160,6 +171,9 @@ class Home extends CI_Controller {
 		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
 		$this->load->model('DictionaryModel');
 		$data = $this->input->post();
+
+		$tags = $this->input->post('RelatedTerms');
+		$DeletedTags = $this->input->post('DeletedTerms');
 		
 			if ($this->form_validation->run())
 	        {
@@ -184,6 +198,16 @@ class Home extends CI_Controller {
 		            {
 						$this->session->set_flashdata('response','Term was not updated.');
 		            }
+				}
+
+				if(isset($DeletedTags))
+				{
+					$this->DictionaryModel->delete_RelatedTerms($DeletedTags,$termID);
+				}
+
+				if(isset($tags))
+				{
+					$this->DictionaryModel->manage_RelatedTerms($tags,$termID);
 				}
 	        }
         
@@ -235,25 +259,19 @@ class Home extends CI_Controller {
 		$this->load->model('DictionaryModel');
 		$searched_item = $this->input->get('search');
 		$language_id = $this->input->get('Language');
-		if(isset($searched_item) and !empty($searched_item))
-		{
-			$data['baseName'] = $this->DictionaryModel->search_get_baseform($searched_item,$language_id);
-			$baseForm = $data['baseName'];
-			$data['languages'] = $this->DictionaryModel->get_languages();
-			$data['records'] = $this->DictionaryModel->baseform_get_term($baseForm['BaseFormID'],$language_id);
-			$data['records_more'] = $this->DictionaryModel->baseform_get_term_more($baseForm['BaseFormID'],$language_id);
-			$data['termNames'] = $this->DictionaryModel->get_TermNames();
-			$data['related_words_ID'] = $this->DictionaryModel->related_words_ID($baseForm['BaseFormID'],$language_id);
 
-			$this->load->view('dictionary',$data);
-		}
-		else
-		{
-			$data['records'] = "";
-		}
+		$data['baseName'] = $this->DictionaryModel->search_get_baseform($searched_item,$language_id);
+		$baseForm = $data['baseName'];
+		$data['languages'] = $this->DictionaryModel->get_languages();
+		$data['records'] = $this->DictionaryModel->baseform_get_term($baseForm['BaseFormID'],$language_id);
+		$data['records_more'] = $this->DictionaryModel->baseform_get_term_more($baseForm['BaseFormID'],$language_id);
+		$data['termNames'] = $this->DictionaryModel->get_TermNames();
+		$data['related_words_ID'] = $this->DictionaryModel->related_words_ID($baseForm['BaseFormID'],$language_id);
+
+		$this->load->view('dictionary',$data);
 	}
 
-	public function delete_term($record_id,$tableName,$fieldName)
+	public function delete_term($record_id,$tableName,$fieldName,$isViewTerm,$baseID)
 	{
 		$data = array('Deleted' => 1, 'DateDeleted' => date("Y-m-d H:i:s"));
 		$this->load->model('DictionaryModel');
@@ -266,7 +284,16 @@ class Home extends CI_Controller {
 		{
 			$this->session->set_flashdata('response','Record Not Deleted!');
 		}
-		return redirect("home/Terms");
+
+		if($isViewTerm)
+		{
+			$redirect = "home/Terms";
+		}
+		else
+		{
+			$redirect = "home/Term?baseForm={$baseID}&term=0";
+		}
+		return redirect($redirect);
 	}
 
 	public function delete_translation($record_id)

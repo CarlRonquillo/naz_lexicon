@@ -10,11 +10,23 @@
 		public function get_TermNames()
 		{
 			$this->db->distinct();
-			$this->db->select('TermName');
+			$this->db->select('TermID,TermName');
 			$this->db->from('term');
 			$this->db->where('Deleted',0);
 			$query = $this->db->get();
 			return $query->result_array();
+		}
+
+		public function get_relatedTerms($termID)
+		{
+			$this->db->select('*');
+			$this->db->from('term');
+			$this->db->join('termrelatestoterm', 'termrelatestoterm.FKTermIDChild = term.TermID');
+			$this->db->order_by('TermName', 'ASC');
+			$this->db->where('term.Deleted',0);
+			$this->db->where('termrelatestoterm.FKTermIDParent',$termID);
+			$query = $this->db->get();
+			return $query->result();
 		}
 
 		public function get_BaseNames()
@@ -140,6 +152,7 @@
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
 			$this->db->where('baseform.BaseFormID',$baseFormID);
 			$this->db->where('baseform.Deleted', 0);
+			$this->db->where('term.Deleted', 0);
 			$query = $this->db->get();
 			if($query->num_rows() > 0)
 			{
@@ -159,6 +172,19 @@
 			if($query->num_rows() > 0)
 			{
 				return $query->row();
+			}
+		}
+
+		public function get_TermID($termName)
+		{
+			$this->db->select('TermID');
+			$this->db->from('term');
+			$this->db->where('term.TermName',$termName);
+			$this->db->where('term.Deleted', 0);
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+			{
+				return $query->row()->TermID;
 			}
 		}
 
@@ -232,6 +258,36 @@
 
 			$data = array('PartOfSpeechID' => $partOfSpeech,'FKBaseValueID' => $baseID, 'FKInflectionID' => $this->db->insert_id());
 			return $this->db->insert('basehasinflection',$data);
+		}
+
+		public function manage_RelatedTerms($tags,$termID)
+		{
+			$arr = explode(',', $tags);
+			foreach ($arr as $tag)
+			{
+				$FKTermIDChild = $this->get_TermID($tag);
+				if(isset($FKTermIDChild))
+				{
+					$query = $this->db->query("SELECT TRUE FROM termrelatestoterm WHERE FKTermIDParent = ".$termID." AND FKTermIDChild = ".$FKTermIDChild." limit 1");
+					$data = array('FKTermIDChild' => $FKTermIDChild, 'FKTermIDParent' => $termID);
+					$query->num_rows() == 0 ? $this->db->insert('termrelatestoterm', $data) : false;
+				}
+			}
+		}
+
+		public function delete_RelatedTerms($tags,$termID)
+		{
+			$arr = explode(',', $tags);
+			foreach ($arr as $tag)
+			{
+				$FKTermIDChild = $this->get_TermID($tag);
+				if(isset($FKTermIDChild))
+				{
+					$query = $this->db->query("SELECT TRUE FROM termrelatestoterm WHERE FKTermIDParent = ".$termID." AND FKTermIDChild = ".$FKTermIDChild." limit 1");
+					$data = array('FKTermIDChild' => $FKTermIDChild, 'FKTermIDParent' => $termID);
+					$query->num_rows() == 1 ? $this->db->delete('termrelatestoterm', array('FKTermIDParent' => $termID, 'FKTermIDChild' => $FKTermIDChild))  : false;
+				}
+			}
 		}
 
 		public function save_term($data,$baseID)

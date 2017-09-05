@@ -5,13 +5,17 @@
 		<script src="<?php echo base_url("resources/js/jquery-1.12.4.js"); ?>"></script>
 		<script src="<?php echo base_url("resources/js/jquery-ui.js"); ?>"></script>
 
-	  	<script>
-			$( function() {
-		    var availableTags = <?php echo json_encode($terms);?>;
-		    $( "#search" ).autocomplete({
-		      source: availableTags
-		    });
-		  } );
+		<script src="<?php echo base_url("resources/js/tags.js"); ?>"></script>
+        <script src="<?php echo base_url("resources/js/autofill.js"); ?>"></script>
+
+        <script>
+        var selector = '.nav li';
+
+		$(selector).on('click', function(){
+		    $(selector).removeClass('active');
+		    $(this).addClass('active');
+		});
+
 		</script>
 
 	</body>

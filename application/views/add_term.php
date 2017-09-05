@@ -144,10 +144,20 @@
                                             <div class="col-lg-8">
                                                 <?php echo form_textarea(['type' => 'text','name' => 'Note', 'class' => 'form-control','autocomplete' => 'off','rows' => 2],$Note); ?>
                                             </div>
+                                            <span><?php echo form_error('Note') ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label for="RelatedTerms" class="col-lg-3 control-label">Related Terms</label>
+                                            <div class="col-lg-8">
+                                                <!--<?php echo form_input(['name' => 'RelatedTerms', 'class' => 'form-control','id' => 'ms1']); ?>-->
+                                                <?php echo form_input(['name' => 'RelatedTerms', 'class' => 'form-control','id' => 'RelatedTerms','value' => $relatedTerms]); ?>
+                                                <?php echo form_input(['name' => 'DeletedTerms', 'class' => 'form-control','id' => 'DeletedTerms']); ?>
+                                            </div>
                                             <div class="col-lg-1">
                                                 <?php echo form_button(['type' => 'submit','content' => "<i class='glyphicon glyphicon-floppy-disk'></i>", 'class' => 'btn btn-primary round next-step', "title" => "Save Term"]); ?>
                                             </div>
-                                            <span><?php echo form_error('Note') ?></span>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -162,6 +172,7 @@
                                       <th>Core Term</th>
                                       <th>Glossary Entry</th>
                                       <th>Common Usage</th>
+                                      <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -175,6 +186,7 @@
                                                 <td><?php echo $Term->CoreTerm; ?></td>
                                                 <td><?php echo $Term->GlossaryEntry; ?></td>
                                                 <td><?php echo $Term->CommonUsage; ?></td>
+                                                <td><?php echo anchor("home/delete_term/{$Term->TermID}/term/TermID/0/{$_GET['baseForm']}","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>
                                             </tr>
                                         <?php } else: ?>
                                             <tr>No Records Found!</tr>
@@ -190,7 +202,18 @@
         </div><br>
     </div>
 
-    <script type="text/javascript"> 
+    <?php 
+        $terms = array();
+        if(isset($termNames))
+        {
+            foreach($termNames as $term)
+            {
+                $terms[$term['TermID']] = $term['TermName'];
+            }
+        }
+    ?>
+
+    <script>
         function getval(sel,method,variable)
         {
             var base_url = "<?php echo base_url(); ?>"
@@ -246,3 +269,15 @@
     </script>
 
 <?php include('footer.php'); ?>
+
+<script>
+    $(function(){
+        $("#RelatedTerms").tags({
+            requireData: true,
+            unique: true,
+            deletedInput: 'DeletedTerms'
+        }).autofill({
+            data:<?php if(isset($terms)) {echo json_encode(array_values($terms));} ?>
+        })
+    });
+</script>

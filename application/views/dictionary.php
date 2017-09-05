@@ -1,23 +1,36 @@
 <?php include('header.php'); ?>
 
-	<div id="container">
-		<div style ="width:63%;margin:auto;">
+	<div class="container">
+		<div style ="width:80%;margin:auto;">
+			<?php
+				if(isset($_GET['search']))
+				{
+					$searchValue=htmlentities($_GET['search']);
+					$display = "block";
+					$display2 = "none";
+				}
+				else
+				{
+				    $searchValue = NULL;
+				    $display = "none";
+				    $display2 = "block";
+				}
+			?>
+			<div  id="home_header" style="display:<?php echo $display2 ?>;">
+				<center><img id="home_header" alt="Brand" style="filter:invert(90%);width: 80px;" class="img-responsive" src="<?php echo base_url("resources/images/Nazarene Logo-White.png"); ?>">
+					<h1 style="font-family:'Constantia';font-size: 60px;">NAZARENE LEXICON</h1>
+					<hr><h2>What do you want to know?</h2>
+				</center>
+				<br>
+			</div>
 			<div class="row">
 				<div class="autocomplete_container col-md-8">
-					<?php echo form_open("home/search",['class' => 'form','method' => 'get','id' => 'frm_dictionary']); 
-						if(isset($_GET['search']))
-					    {
-							$searchValue=htmlentities($_GET['search']);
-						}
-						else
-						{
-				    		$searchValue = "";
-						}?>
+					<?php echo form_open("home/search",['class' => 'form','method' => 'get','id' => 'frm_dictionary']); ?>
 					<div class="input-group">
 						<?php echo form_input(['type' => 'text','name' => 'search','id' => 'search', 'class' => 'form-control',
-																'autocomplete' => 'off', 'placeholder' => 'Lookup','value' => $searchValue]); ?>
+																'autocomplete' => 'off', 'placeholder' => 'Lookup','value' => $searchValue,'autofocus' => true]); ?>
 						<span class="input-group-btn">
-							<?php echo form_button(['type' => 'submit','class' => 'btn btn-default','name' => 'submit','content' => "<span class='btn-label'><i class='glyphicon glyphicon-search'></i></span>"]); ?>
+							<?php echo form_button(['type' => 'submit','class' => 'btn btn-default','content' => "<span class='btn-label'><i class='glyphicon glyphicon-search'></i></span>"]); ?>
 						</span>
 					</div>
 				</div>
@@ -45,7 +58,7 @@
 				    	</div>
 			    	</div>
 			    </div>
-	    	</div> 
+	    	</div>
 	    	<div class="row">
 		    	<div class="form-group col-md-12">
 			    	<div class="radio">
@@ -62,7 +75,8 @@
 					</div>
 			    </div>
 		    </div>
-			<div class="col-md-9">
+		    <div style="display:<?php echo $display;?>">
+			<div class="col-md-8">
 				<div class="row">
 			    	<div class="col-md-12">
 			    		<p class="term">
@@ -146,7 +160,7 @@
 			</div>
 
 			</div>
-			<div class="see-also col-md-3">
+			<div class="see-also col-md-4">
 			    <?php if(count($related_words_ID)): ?>
 			    	<div class="row">
 			    		<p>see also</p>
@@ -163,6 +177,7 @@
 		    <?php else: echo "<h3>No result found!</h3><p><i>Translation for the term you've searched may not be available.<br>Please try again.</i></p>"; endif; ?>
 			<?php echo form_close(); ?>
 		</div>
+		</div>
 	</div>
 	<?php 
 		$terms = array();
@@ -176,3 +191,12 @@
 	?>
 
 <?php include('footer.php'); ?>
+
+<script>
+	$( function() {
+		var availableTags = <?php if(isset($terms)) {echo json_encode($terms);} ?>;
+		$( "#search" ).autocomplete({
+		    source: availableTags
+		});
+	} );
+</script>

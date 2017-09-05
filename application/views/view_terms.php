@@ -56,7 +56,7 @@
 			    				<td><?php echo $term->BaseName; ?></td>
 			    				<td><?php echo $term->GlossaryEntry; ?></td>
 			    				<td><?php echo $term->DocumentReference; ?></td>
-			    				<td><?php echo anchor("home/delete_term/{$term->TermID}/term/TermID","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>
+			    				<td><?php echo anchor("home/delete_term/{$term->TermID}/term/TermID/1","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>
 			    			</tr>
 						<?php } else: ?>
 							<tr>No Records Found!</tr>
@@ -78,3 +78,12 @@
 	?>
 
 <?php include('footer.php'); ?>
+
+<script>
+	$( function() {
+		var availableTags = <?php if(isset($terms)) {echo json_encode($terms);} ?>;
+		$( "#search" ).autocomplete({
+		    source: availableTags
+		});
+	} );
+</script>
