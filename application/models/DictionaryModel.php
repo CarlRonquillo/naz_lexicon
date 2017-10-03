@@ -7,6 +7,12 @@
 			return $query->row()->BaseName;
 		}
 
+		public function get_BaseID($Baseform)
+		{
+			$query = $this->db->get_where('baseform', array('BaseName' => $Baseform));
+			return $query->row()->BaseFormID;
+		}
+
 		public function get_TermNames()
 		{
 			$this->db->distinct();

@@ -54,7 +54,7 @@
                 <div class="form-group">
                     <label for="BaseForm" class="col-lg-3 control-label">Base Form</label>
                     <div class="col-lg-5">
-                                        <?php
+                            <?php
                             $baseForms = array();
                             foreach($Base_Names as $Base_Name)
                             {

@@ -27,8 +27,7 @@
 				<div class="autocomplete_container col-md-8">
 					<?php echo form_open("home/search",['class' => 'form','method' => 'get','id' => 'frm_dictionary']); ?>
 					<div class="input-group">
-						<?php echo form_input(['type' => 'text','name' => 'search','id' => 'search', 'class' => 'form-control',
-																'autocomplete' => 'off', 'placeholder' => 'Lookup','value' => $searchValue,'autofocus' => true]); ?>
+						<?php echo form_input(['type' => 'text','name' => 'search','id' => 'search', 'class' => 'form-control','autocomplete' => 'off', 'placeholder' => 'Lookup','value' => $searchValue,'autofocus' => true]); ?>
 						<span class="input-group-btn">
 							<?php echo form_button(['type' => 'submit','class' => 'btn btn-default','content' => "<span class='btn-label'><i class='glyphicon glyphicon-search'></i></span>"]); ?>
 						</span>

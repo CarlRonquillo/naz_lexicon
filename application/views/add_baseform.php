@@ -21,6 +21,7 @@
         {
             $header = "Update inflection: <b>".$Inflection."</b>";
         }
+
     ?>
 	<div class="row">
 		<h2 id="base-header" ><?php echo $header; ?></h2><hr>
@@ -40,7 +41,7 @@
             <?php echo form_open("home/save_BaseName/{$_GET['baseForm']}",['class' => 'form-horizontal','name' => 'frmBaseName']); 
             if(!isset($BaseName))
             {
-                 $BaseName = "";
+                $BaseName = "";
             }?>
             <div class="row">
                 <div class="form-group">
@@ -95,24 +96,38 @@
                 <?php echo form_close(); ?>
         </div>
         <div class="col-md-6">
-        	<form>
+            <div class="">
+                <?php
+                if(!empty($_GET['baseName']))
+                { ?>
+                        <div class="form-group">    
+                            <h3><b style="margin-right:25px;"><?php echo $_GET['baseName']; ?></b>
+                            <?php echo form_button(['id' => 'update-basename','name' => 'update-basename', 'content' => "<i class='glyphicon glyphicon glyphicon-pencil'></i>", 'class' => 'btn btn-success round', "title" => "Edit Basename",'onclick' => "updateBasename('{$_GET['baseName']}')",]);?>
+                            <?php echo anchor("home/delete_baseform/{$_GET['baseForm']}/baseform/BaseFormID","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger round","onclick" => "return confirm('Are you sure you want delete this basename?')"]); ?></h3>
+                        </div>
+            <?php } ?>
+            </div>
             <div class="row">
             	<div class="form-group">
                     <label for="BaseForm" class="col-lg-2 control-label">Base Form</label>
-                    <div class="col-lg-5">
+                    <div class="autocomplete_container col-lg-5">
+                        <?php echo form_open("home/get_BaseID",['class' => 'form','method' => 'post','id' => 'frm_dictionary']); ?>
+                        <div class="input-group">
+                            <?php echo form_input(['type' => 'text','name' => 'base','id' => 'base', 'class' => 'form-control','autocomplete' => 'off', 'placeholder' => 'Lookup','autofocus' => true]); ?>
+                            <span class="input-group-btn">
+                                <?php echo form_button(['type' => 'submit','class' => 'btn btn-default','content' => "<span class='btn-label'><i class='glyphicon glyphicon-circle-arrow-right'></i></span>"]); ?>
+                                <!--<a id="TermName" title="Clear Inflection" data-value ="0" onclick="insertParam('#base','baseForm')" class="btn btn-default"><span class='btn-label'><i class='glyphicon glyphicon-circle-arrow-right'></i></span></a>-->
+                            </span>
+                        </div>
                     <?php
                         $baseForms = array();
                         foreach($Base_Names as $Base_Name)
                         {
                             $baseForms[$Base_Name->BaseFormID]=$Base_Name->BaseName;
                         }
-                        echo form_dropdown(['id' => 'BaseForm','name' => 'BaseForm', 'class' => 'form-control',
-                                                                'autocomplete' => 'off','onchange' => "getval(this,'BaseForm','baseForm');"],$baseForms,$_GET['baseForm']);
+                        //echo form_dropdown(['id' => 'BaseForm','name' => 'BaseForm', 'class' => 'form-control','autocomplete' => 'off','onchange' => "getval(this,'BaseForm','baseForm');"],$baseForms,$_GET['baseForm']);
                         ?>
-                    </div>
-                    <div class="col-lg-2">
-                        <?php echo form_button(['id' => 'update-basename','name' => 'update-basename', 'content' => "<i class='glyphicon glyphicon glyphicon-pencil'></i>", 'class' => 'btn btn-success round', "title" => "Edit Basename",'onclick' => 'updateBasename()']);?>
-                        <?php echo anchor("home/delete_baseform/{$_GET['baseForm']}/baseform/BaseFormID","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger round","onclick" => "return confirm('Are you sure you want delete this basename?')"]); ?>
+                        <?php echo form_close(); ?>
                     </div>
                 </div>
             </div>
@@ -141,7 +156,6 @@
                     <?php endif; ?>
                 </tbody>
             </table>
-            </form>
    		</div>
     </div>
     <div class="row">
@@ -156,11 +170,10 @@
             location.replace(base_url + 'index.php/home/' + method + '?' + variable + '=' + sel.value + "&inflection=0");
         }
 
-        function updateBasename()
+        function updateBasename(baseName)
         {
-            var e = document.getElementById('BaseForm');
-            $("#base-header").html("Update Base Form: <b>"+ e.options[e.selectedIndex].text +"</b>");
-            $("#BaseName").val(e.options[e.selectedIndex].text);
+            $("#base-header").html("Update Base Form: <b>"+ baseName +"</b>");
+            $("#BaseName").val(baseName);
             $("#saveBaseName").val(1);
         }
 
@@ -190,3 +203,12 @@
     </script>
 
 <?php include('footer.php'); ?>
+
+    <script>
+        $( function() {
+            var availableTags = <?php if(isset($baseForms)) {echo json_encode(array_values($baseForms));} ?>;
+            $( "#base" ).autocomplete({
+                source: availableTags
+            });
+        } );
+    </script>

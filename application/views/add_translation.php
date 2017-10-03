@@ -170,7 +170,7 @@
     <div class="row">
         <div class="col-md-3 col-md-offset-9">
             <?php echo anchor("home/Term?baseForm={$_GET['baseForm']}&term=0","Term",["class"=>"col-md-5 btn btn-default","title" => "Add Translation"]); ?>
-            <?php echo anchor("home/Terms","Finish",["class"=>"col-md-6 col-md-offset-1 btn btn-primary","title" => "View Terms"]); ?>
+            <?php echo anchor("home/Terms","View List",["class"=>"col-md-6 col-md-offset-1 btn btn-primary","title" => "View Terms"]); ?>
         </div>
     </div><br>
 </div>

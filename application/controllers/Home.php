@@ -37,7 +37,7 @@ class Home extends CI_Controller {
 		$data['Inflections'] = $this->DictionaryModel->get_inflections($baseID);
 		$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
 		$data['PartOfSpeech'] = $this->DictionaryModel->get_partOfSpeech();
-		$data['Baseform'] = $this->DictionaryModel->get_BaseForm($baseID);
+		//$data['Baseform'] = $this->DictionaryModel->get_BaseForm($baseID);
 		$data['record'] = $this->DictionaryModel->get_Singleinflection($inflectionID);
 		//$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
 		$this->load->view('add_baseform',$data);
@@ -269,6 +269,24 @@ class Home extends CI_Controller {
 		$data['related_words_ID'] = $this->DictionaryModel->related_words_ID($baseForm['BaseFormID'],$language_id);
 
 		$this->load->view('dictionary',$data);
+	}
+
+	public function get_BaseID()
+	{
+		$this->load->model('DictionaryModel');
+		$baseform = $this->input->post('base');
+		$baseID = $this->DictionaryModel->get_BaseID($baseform);
+
+		if(!isset($baseID))
+		{
+			$baseID=0;
+		}
+		else
+		{
+			$BaseName = $this->DictionaryModel->get_BaseForm($baseID);
+		}
+
+		return redirect("home/BaseForm?baseForm={$baseID}&inflection=0&baseName={$BaseName}");
 	}
 
 	public function delete_term($record_id,$tableName,$fieldName,$isViewTerm,$baseID)
