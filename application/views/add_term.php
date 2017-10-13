@@ -5,7 +5,6 @@
             if(count($record)>0)
             {
                 $TermName = $record->TermName;
-                $CoreTerm = $record->CoreTerm;
                 $GlossaryEntry = $record->GlossaryEntry;
                 $CommonUsage = $record->CommonUsage;
                 $Title = $record->Title;
@@ -16,7 +15,6 @@
             else
             {
                 $TermName = "";
-                $CoreTerm = "";
                 $GlossaryEntry = "";
                 $CommonUsage = "";
                 $Title = "";
@@ -79,23 +77,13 @@
                     <span><?php echo form_error('TermName') ?></span>
                 </div>
             </div>
-                                    <div class="row">
-                                        <div class="form-group">
-                                            <label for="CoreTerm" class="col-lg-3 control-label">Core Term</label>
-                                            <div class="col-lg-3">
-                                                <?php echo form_input(['type' => 'text','name' => 'CoreTerm', 'class' => 'form-control',
-                                                    'autocomplete' => 'off','maxlength' => 1],$CoreTerm); ?>
-                                            </div>
-                                            <span><?php echo form_error('CoreTerm') ?></span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group">
-                                            <label for="GlossaryEntry" class="col-lg-3 control-label">Glossary Entry</label>
-                                            <div class="col-lg-8">
-                                                <?php echo form_input(['type' => 'text','name' => 'GlossaryEntry', 'class' => 'form-control',
+            <div class="row">
+                <div class="form-group">
+                    <label for="GlossaryEntry" class="col-lg-3 control-label">Glossary Entry</label>
+                    <div class="col-lg-8">
+                        <?php echo form_input(['type' => 'text','name' => 'GlossaryEntry', 'class' => 'form-control',
                                                     'autocomplete' => 'off','maxlength' => 50],$GlossaryEntry); ?>
-                                            </div>
+                    </div>
                                             <span><?php echo form_error('GlossaryEntry') ?></span>
                                         </div>
                                     </div>
@@ -169,7 +157,6 @@
                                     <tr>
                                       <th>#</th>
                                       <th>Term</th>
-                                      <th>Core Term</th>
                                       <th>Glossary Entry</th>
                                       <th>Common Usage</th>
                                       <th></th>
@@ -183,7 +170,6 @@
                                                 <td><?php echo $count++; ?></td>
                                                 <td><a style="cursor:pointer" data-value ="<?php echo $Term->TermID; ?>" onclick="insertParam(this,'term')"><?php echo $Term->TermName; ?></a>
                                                 <!--<?php echo anchor("",$Term->TermName,array('data-value' => '{$Term->TermID}', 'onclick' => "insertParam(this,'term')"));?>--></td>
-                                                <td><?php echo $Term->CoreTerm; ?></td>
                                                 <td><?php echo $Term->GlossaryEntry; ?></td>
                                                 <td><?php echo $Term->CommonUsage; ?></td>
                                                 <td><?php echo anchor("home/delete_term/{$Term->TermID}/term/TermID/0/{$_GET['baseForm']}","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>

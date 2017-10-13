@@ -268,6 +268,22 @@ class Home extends CI_Controller {
 		$data['termNames'] = $this->DictionaryModel->get_TermNames();
 		$data['related_words_ID'] = $this->DictionaryModel->related_words_ID($baseForm['BaseFormID'],$language_id);
 
+		$promptResult = $this->DictionaryModel->prompt($searched_item,$language_id);
+
+		if($promptResult == '1')
+		{
+			$data['prompt'] = "<h3>No record found!</h3><p><i>The search term you've enter does not exist in our vocabulary.<br>Please try again.</i></p>";
+		}
+		else if($promptResult == '2')
+		{
+			$data['prompt'] = "<h3>No translation found!</h3><p><i>Translation for the term you've searched may not be available.<br><a>suggest translation here.</a></i></p>";
+		}
+		else if($promptResult == '3')
+		{
+			$url = base_url('index.php/home/BaseForm?baseForm=0&inflection=0');
+			$data['prompt'] = "<h3>Sorry, this term has no baseform!</h3><p><i><a href='{$url}'>add baseform here.</a></i></p>";
+		}
+
 		$this->load->view('dictionary',$data);
 	}
 

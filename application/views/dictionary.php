@@ -93,12 +93,12 @@
 			 	<div class="panel">
 				    <div class="panel-heading">
 				      	<h4 class="panel-title">
-				        	<a class="accordion-toggle" data-toggle="collapse" href="#<?php echo $record->TermID; ?>">
+				        	<a class="accordion-toggle collapsed" data-toggle="collapse" href="#<?php echo $record->TermID; ?>">
 				          		<?php echo $record->TermName; ?> (part of speech) - <i><b><?php echo $record->Translation; ?></b></i>
 				        	</a>
 				     	</h4>
 				    </div>
-			    <div id="<?php echo $record->TermID; ?>" class="panel-collapse collapse in">
+			    <div id="<?php echo $record->TermID; ?>" class="panel-collapse collapse">
 			      <div class="panel-body">
 			        <p><?php echo $record->GlossaryEntry; ?> 
 			        <br><a>edit</a></p>
@@ -132,12 +132,12 @@
 							 	<div class="panel">
 								    <div class="panel-heading">
 								      	<h4 class="panel-title">
-								        	<a class="accordion-toggle" data-toggle="collapse" href="#<?php echo $record->TermID; ?>">
+								        	<a class="accordion-toggle collapsed" data-toggle="collapse" href="#<?php echo $record->TermID; ?>">
 								          		<?php echo $record->TermName; ?> (part of speech) - <i><b><?php echo $record->Translation; ?></b></i>
 								        	</a>
 								     	</h4>
 								    </div>
-							    <div id="<?php echo $record->TermID; ?>" class="panel-collapse collapse in">
+							    <div id="<?php echo $record->TermID; ?>" class="panel-collapse collapse">
 							      <div class="panel-body">
 							        <p><?php echo $record->GlossaryEntry; ?> 
 							        <br><a>edit</a></p>
@@ -173,7 +173,7 @@
 			    	</ul>
 			    <?php endif; ?>
 			</div>
-		    <?php else: echo "<h3>No result found!</h3><p><i>Translation for the term you've searched may not be available.<br>Please try again.</i></p>"; endif; ?>
+		    <?php else: echo $prompt; endif; ?>
 			<?php echo form_close(); ?>
 		</div>
 		</div>

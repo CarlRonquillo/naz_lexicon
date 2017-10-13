@@ -78,7 +78,7 @@
 		public function baseform_get_term($baseFormID,$languageID)
 		{
 			$this->db->select('*');
-			$this->db->limit(2);
+			$this->db->limit(6);
 			$this->db->from('baseform');
 			$this->db->join('termhasbaseform', 'termhasbaseform.FKBaseValueID = baseform.BaseFormID');
 			$this->db->join('term', 'term.TermID = termhasbaseform.FKTermID');
@@ -96,12 +96,43 @@
 			}
 		}
 
+		public function prompt($word,$languageID)
+		{
+			$this->db->where('TermName',$word);
+		    $query1 = $this->db->get('term');
+		    if ($query1->num_rows() > 0)
+		    {
+		    	$termID = $query1->row()->TermID;
 
+		    	if(isset($termID))
+			    {
+			    	$this->db->where('FKLanguageID',$languageID)->where('FKTermID',$termID);
+				    $query = $this->db->get('translation');
+				    if ($query->num_rows() > 0)
+				    {
+				    	$this->db->where('FKTermID',$termID);
+					    $query = $this->db->get('termhasbaseform');
+					    if ($query->num_rows() <= 0)
+					    {
+					        return '3';
+					    }
+				    }
+				    else
+				    {
+				    	return '2';
+				    }
+			    }
+		    }
+		    else
+		    {
+		    	return '1';
+		    }
+		}
 
 		public function baseform_get_term_more($baseFormID,$languageID)
 		{
 			$this->db->select('*');
-			$this->db->limit($this->row_count('term'),2);
+			$this->db->limit($this->row_count('term'),6);
 			$this->db->from('baseform');
 			$this->db->join('termhasbaseform', 'termhasbaseform.FKBaseValueID = baseform.BaseFormID');
 			$this->db->join('term', 'term.TermID = termhasbaseform.FKTermID');

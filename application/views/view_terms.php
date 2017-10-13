@@ -3,7 +3,7 @@
 	<div id="container" style ="width:63%;margin:auto;">
 		<div class="row">
 			<div class="col-md-2">
-				<?php echo anchor("home/BaseForm?baseForm=1&inflection=0","Add to Vocabulary",["class"=>"btn btn-primary btn-sm"]); ?>
+				<?php echo anchor("home/BaseForm?baseForm=0&inflection=0","Add to Vocabulary",["class"=>"btn btn-primary btn-sm"]); ?>
 			</div>
 			<div class="autocomplete_container col-md-8">
 				<?php echo form_open("home/Terms",['class' => 'form','method' => 'get','id' => 'frm_dictionary']); ?>
