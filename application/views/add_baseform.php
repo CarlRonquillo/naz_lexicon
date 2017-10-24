@@ -5,12 +5,12 @@
         if(count($record)>0)
         {
             $Inflection = $record->InflectionName;
-            $PartOfSpeechID = $record->PartOfSpeechID;
+            $partofspeechID = $record->partofspeechID;
         }
         else
         {
             $Inflection = "";
-            $PartOfSpeechID = 0;
+            $partofspeechID = 0;
         }
 
         if($_GET['inflection'] == 0)
@@ -74,15 +74,15 @@
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label for="PartOfSpeech" class="col-lg-3 control-label">Part of Speech</label>
+                    <label for="partofspeech" class="col-lg-3 control-label">Part of Speech</label>
                         <div class="col-lg-4">
                         <?php
                             $PartOf_Speech = array();
-                            foreach($PartOfSpeech as $speech)
+                            foreach($partofspeech as $speech)
                             {
-                                $PartOf_Speech[$speech->PartOfSpeechID]=$speech->PartOfSpeechValue;
+                                $PartOf_Speech[$speech->partofspeechID]=$speech->partofspeechValue;
                             }
-                                echo form_dropdown(['name' => 'PartOfSpeech', 'class' => 'form-control','autocomplete' => 'off'],$PartOf_Speech,$PartOfSpeechID);
+                                echo form_dropdown(['name' => 'partofspeech', 'class' => 'form-control','autocomplete' => 'off'],$PartOf_Speech,$partofspeechID);
                         ?>
                         </div>
                 	<div class="col-lg-1">
@@ -148,7 +148,7 @@
 	                        <td><?php echo $count++; ?></td>
 	                        <td><a style="cursor:pointer" data-value ="<?php echo $Inflection->InflectionID; ?>" onclick="insertParam(this,'inflection')"><?php echo $Inflection->InflectionName; ?></a>
                             <!--<?php echo anchor("home/edit_host/",$Inflection->InflectionName);?></td>-->
-	                        <td><?php echo $Inflection->PartOfSpeechValue; ?></td>
+	                        <td><?php echo $Inflection->partofspeechValue; ?></td>
                             <td><?php echo anchor("home/delete_baseform/{$Inflection->InflectionID}/inflection/InflectionID","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>
 	                    </tr>
 	                    <?php } else: ?>

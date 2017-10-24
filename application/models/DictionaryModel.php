@@ -288,12 +288,12 @@
 			return $this->db->insert($tableName,$data);
 		}
 
-		public function save_inflection($inflectionName,$baseID,$partOfSpeech)
+		public function save_inflection($inflectionName,$baseID,$partofspeech)
 		{
 			$data = array('InflectionName' => $inflectionName);
 			$this->db->insert('inflection',$data);
 
-			$data = array('PartOfSpeechID' => $partOfSpeech,'FKBaseValueID' => $baseID, 'FKInflectionID' => $this->db->insert_id());
+			$data = array('partofspeechID' => $partofspeech,'FKBaseValueID' => $baseID, 'FKInflectionID' => $this->db->insert_id());
 			return $this->db->insert('basehasinflection',$data);
 		}
 
@@ -382,15 +382,15 @@
 			return $this->db->update('context', $context);
 		}
 
-		public function update_inflection($inflectionName,$inflectionID,$partOfSpeech)
+		public function update_inflection($inflectionName,$inflectionID,$partofspeech)
 		{
 			$inflection = array('InflectionName' => $inflectionName);
 			$this->db->where('InflectionID', $inflectionID);
 			$this->db->update('inflection', $inflection); 
 
-			$PartOfSpeech = array('PartOfSpeechID' => $partOfSpeech);
+			$partofspeech = array('partofspeechID' => $partofspeech);
 			$this->db->where('FKInflectionID', $inflectionID);
-			return $this->db->update('basehasinflection', $PartOfSpeech);
+			return $this->db->update('basehasinflection', $partofspeech);
 		}
 
 		public function update_basename($data,$baseID)
@@ -418,10 +418,10 @@
 			}
 		}
 
-		public function get_partOfSpeech()
+		public function get_partofspeech()
 		{
 			$this->db->select('*');
-			$this->db->from('PartOfSpeech');
+			$this->db->from('partofspeech');
 			$query = $this->db->get();
 			if($query->num_rows() > 0)
 			{
@@ -435,7 +435,7 @@
 			$this->db->from('baseform');
 			$this->db->join('basehasinflection', 'basehasinflection.FKBaseValueID = baseform.BaseFormID','inner');
 			$this->db->join('inflection', 'inflection.InflectionID = basehasinflection.FKInflectionID','inner');
-			$this->db->join('PartOfSpeech', 'PartOfSpeech.PartOfSpeechID = basehasinflection.PartOfSpeechID','inner');
+			$this->db->join('partofspeech', 'partofspeech.partofspeechID = basehasinflection.partofspeechID','inner');
 			$this->db->where('baseform.BaseFormID', $baseFormID);
 			$this->db->order_by('InflectionName', 'ASC');
 			$this->db->where('inflection.Deleted',0);
@@ -451,7 +451,7 @@
 			$this->db->select('*');
 			$this->db->from('inflection');
 			$this->db->join('basehasinflection','basehasinflection.FKInflectionID = inflection.InflectionID','left');
-			$this->db->join('PartOfSpeech', 'PartOfSpeech.PartOfSpeechID = basehasinflection.PartOfSpeechID','inner');
+			$this->db->join('partofspeech', 'partofspeech.partofspeechID = basehasinflection.partofspeechID','inner');
 			$this->db->where('inflection.InflectionID', $inflectionID);
 			$query = $this->db->get();
 			if($query->num_rows() > 0)

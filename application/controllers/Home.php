@@ -36,7 +36,7 @@ class Home extends CI_Controller {
 		$inflectionID = $this->input->get('inflection');
 		$data['Inflections'] = $this->DictionaryModel->get_inflections($baseID);
 		$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
-		$data['PartOfSpeech'] = $this->DictionaryModel->get_partOfSpeech();
+		$data['partofspeech'] = $this->DictionaryModel->get_partofspeech();
 		//$data['Baseform'] = $this->DictionaryModel->get_BaseForm($baseID);
 		$data['record'] = $this->DictionaryModel->get_Singleinflection($inflectionID);
 		//$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
@@ -148,17 +148,17 @@ class Home extends CI_Controller {
 	public function save_Inflection($baseID,$inflectionID)
 	{
 		$this->form_validation->set_rules('InflectionName','Inflection','required|is_unique[inflection.InflectionName]');
-		$this->form_validation->set_rules('PartOfSpeech','Part of Speech','required');
+		$this->form_validation->set_rules('partofspeech','Part of Speech','required');
 		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
 		$this->load->model('DictionaryModel');
 		$inflectionName = $this->input->post('InflectionName');
-		$partOfSpeech = $this->input->post('PartOfSpeech');
+		$partofspeech = $this->input->post('partofspeech');
 
 		if ($this->form_validation->run())
         {
         	if(isset($inflectionID) && $inflectionID == 0)
 			{
-				if($this->DictionaryModel->save_inflection($inflectionName,$baseID,$partOfSpeech))
+				if($this->DictionaryModel->save_inflection($inflectionName,$baseID,$partofspeech))
 	            {
 	            	$this->session->set_flashdata('response','Inflection successfully saved.');
 	            }
@@ -169,7 +169,7 @@ class Home extends CI_Controller {
 			}
 			else
 			{
-				if($this->DictionaryModel->update_inflection($inflectionName,$inflectionID,$partOfSpeech))
+				if($this->DictionaryModel->update_inflection($inflectionName,$inflectionID,$partofspeech))
 	            {
 	            	$this->session->set_flashdata('response','Inflection successfully updated.');
 	            }

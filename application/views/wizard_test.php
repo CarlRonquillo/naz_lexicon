@@ -93,15 +93,15 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group">
-                                            <label for="PartOfSpeech" class="col-lg-3 control-label">Part of Speech</label>
+                                            <label for="partofspeech" class="col-lg-3 control-label">Part of Speech</label>
                                             <div class="col-lg-4">
                                                 <?php
                                                     $PartOf_Speech = array();
-                                                    foreach($PartOfSpeech as $speech)
+                                                    foreach($partofspeech as $speech)
                                                         {
-                                                          $PartOf_Speech[$speech->PartOfSpeechID]=$speech->PartOfSpeechValue;
+                                                          $PartOf_Speech[$speech->partofspeechID]=$speech->partofspeechValue;
                                                         }
-                                                    echo form_dropdown(['name' => 'PartOfSpeech', 'class' => 'form-control',
+                                                    echo form_dropdown(['name' => 'partofspeech', 'class' => 'form-control',
                                                                         'autocomplete' => 'off'],$PartOf_Speech);
                                                 ?>
                                             </div>
@@ -145,7 +145,7 @@
                                             <tr>
                                                 <td><?php echo $count++; ?></td>
                                                 <td><?php echo anchor("home/edit_host/",$Inflection->InflectionName);?></td>
-                                                <td><?php echo $Inflection->PartOfSpeechValue; ?></td>
+                                                <td><?php echo $Inflection->partofspeechValue; ?></td>
                                             </tr>
                                         <?php } else: ?>
                                             <tr>No Records Found!</tr>
