@@ -99,7 +99,7 @@
                                                     $PartOf_Speech = array();
                                                     foreach($partofspeech as $speech)
                                                         {
-                                                          $PartOf_Speech[$speech->partofspeechID]=$speech->partofspeechValue;
+                                                          $PartOf_Speech[$speech->PartOfSpeechID]=$speech->partofspeechValue;
                                                         }
                                                     echo form_dropdown(['name' => 'partofspeech', 'class' => 'form-control',
                                                                         'autocomplete' => 'off'],$PartOf_Speech);

@@ -5,12 +5,12 @@
         if(count($record)>0)
         {
             $Inflection = $record->InflectionName;
-            $partofspeechID = $record->partofspeechID;
+            $PartOfSpeechID = $record->PartOfSpeechID;
         }
         else
         {
             $Inflection = "";
-            $partofspeechID = 0;
+            $PartOfSpeechID = 0;
         }
 
         if($_GET['inflection'] == 0)
@@ -80,9 +80,9 @@
                             $PartOf_Speech = array();
                             foreach($partofspeech as $speech)
                             {
-                                $PartOf_Speech[$speech->partofspeechID]=$speech->partofspeechValue;
+                                $PartOf_Speech[$speech->PartOfSpeechID]=$speech->partofspeechValue;
                             }
-                                echo form_dropdown(['name' => 'partofspeech', 'class' => 'form-control','autocomplete' => 'off'],$PartOf_Speech,$partofspeechID);
+                                echo form_dropdown(['name' => 'partofspeech', 'class' => 'form-control','autocomplete' => 'off'],$PartOf_Speech,$PartOfSpeechID);
                         ?>
                         </div>
                 	<div class="col-lg-1">
