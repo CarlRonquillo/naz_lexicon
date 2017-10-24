@@ -119,13 +119,13 @@
                                 <!--<a id="TermName" title="Clear Inflection" data-value ="0" onclick="insertParam('#base','baseForm')" class="btn btn-default"><span class='btn-label'><i class='glyphicon glyphicon-circle-arrow-right'></i></span></a>-->
                             </span>
                         </div>
-                    <?php
-                        $baseForms = array();
-                        foreach($Base_Names as $Base_Name)
-                        {
-                            $baseForms[$Base_Name->BaseFormID]=$Base_Name->BaseName;
-                        }
-                        //echo form_dropdown(['id' => 'BaseForm','name' => 'BaseForm', 'class' => 'form-control','autocomplete' => 'off','onchange' => "getval(this,'BaseForm','baseForm');"],$baseForms,$_GET['baseForm']);
+                        <?php
+                            $baseForms = array();
+                            foreach($Base_Names as $Base_Name)
+                            {
+                                $baseForms[$Base_Name->BaseFormID]=$Base_Name->BaseName;
+                            }
+                            //echo form_dropdown(['id' => 'BaseForm','name' => 'BaseForm', 'class' => 'form-control','autocomplete' => 'off','onchange' => "getval(this,'BaseForm','baseForm');"],$baseForms,$_GET['baseForm']);
                         ?>
                         <?php echo form_close(); ?>
                     </div>

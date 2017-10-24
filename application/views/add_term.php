@@ -53,7 +53,7 @@
                     <label for="BaseForm" class="col-lg-3 control-label">Base Form</label>
                     <div class="col-lg-5">
                             <?php
-                            $baseForms = array();
+                            $baseForms = array('');
                             foreach($Base_Names as $Base_Name)
                             {
                             $baseForms[$Base_Name->BaseFormID]=$Base_Name->BaseName;

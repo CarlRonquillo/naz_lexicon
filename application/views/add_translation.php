@@ -46,7 +46,7 @@
                     <label for="BaseForm" class="col-lg-3 control-label">Base Form</label>
                     <div class="col-lg-5">
                     <?php
-                        $baseForms = array();
+                        $baseForms = array('');
                         if(count($Base_Names)>0)
                         {
 	                        foreach($Base_Names as $Base_Name)
@@ -65,7 +65,7 @@
                     <label for="FKTermID" class="col-lg-3 control-label">Term</label>
                     <div class="col-lg-5">
                     <?php
-                        $_term = array();
+                        $_term = array('');
                         if(count($Terms)>0)
                         {
                         	foreach($Terms as $Term)

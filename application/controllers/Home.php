@@ -124,6 +124,27 @@ class Home extends CI_Controller {
         //$this->load->view('wizard_test',$data);
 	}
 
+	public function save_suggestTranslation($searchedTerm,$translationID)
+	{
+		$this->form_validation->set_rules('suggested_Translation','Translation','required');
+		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
+		$this->load->model('DictionaryModel');
+		$translation = $this->input->post('suggested_Translation');
+		if ($this->form_validation->run())
+        {
+			if($this->DictionaryModel->save_suggestedTranslation($searchedTerm,$translationID,$translation))
+	        {
+	            $this->session->set_flashdata('suggestion_response','Suggestion was successfully saved. Please be advised that this suggestion would be subject for approval. Thank you!');
+	        }
+	        else
+	        {
+				$this->session->set_flashdata('suggestion_response','Suggestion was not saved.');
+	        }
+        }
+
+        return redirect("home/search?search={$searchedTerm}&Language=$translationID");
+	}
+
 	public function save_Inflection($baseID,$inflectionID)
 	{
 		$this->form_validation->set_rules('InflectionName','Inflection','required|is_unique[inflection.InflectionName]');
@@ -276,7 +297,7 @@ class Home extends CI_Controller {
 		}
 		else if($promptResult == '2')
 		{
-			$data['prompt'] = "<h3>No translation found!</h3><p><i>Translation for the term you've searched may not be available.<br><a>suggest translation here.</a></i></p>";
+			$data['prompt'] = "<h3>No translation found!</h3><p><i>Translation for the term you've searched may not be available.<br><a onclick='showHide()' style='cursor:pointer'>suggest translation.</a></i></p>";
 		}
 		else if($promptResult == '3')
 		{

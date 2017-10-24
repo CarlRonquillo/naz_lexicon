@@ -175,9 +175,38 @@
 			</div>
 		    <?php else: echo $prompt; endif; ?>
 			<?php echo form_close(); ?>
+				<?php 
+			    if($error = $this->session->flashdata('suggestion_response')):
+			    {
+			    ?>
+			    <p class="text-success">
+			        <span class ="glyphicon glyphicon-info-sign"></span>
+			        <?php echo $error; ?>
+			    </p>
+			    <?php 
+			    }
+			        endif;
+			    ?>
+		    	<div class= "well" id="suggestTranslation" style="display:none;">
+		    		<?php echo form_open("home/save_suggestTranslation/{$_GET['search']}/{$LanguageID}",['class' => 'form-horizontal','type' => 'POST']); ?>
+					<div class="row">
+                    	<div class="form-group">
+                        	<label for="suggested_Translation" class="col-lg-2 control-label">Translation:</label>
+                            	<div class="col-lg-7">
+                                	<?php echo form_input(['type' => 'text','name' => 'suggested_Translation', 'class' => 'form-control','autocomplete' => 'off']); ?>
+                                </div>
+                                <div class="col-lg-2">
+                                    <?php echo form_button(['type' => 'submit','content' => "Suggest", 'class' => 'btn btn-primary', "title" => "Save Term"]); ?>
+                                </div>
+                                <span><?php echo form_error('suggested_Translation') ?></span>
+                        </div>
+                    </div>
+                    <?php echo form_close(); ?>
+				</div>
 		</div>
 		</div>
 	</div>
+
 	<?php 
 		$terms = array();
 		if(isset($termNames))
@@ -198,4 +227,13 @@
 		    source: availableTags
 		});
 	} );
+
+	function showHide() {
+	    var x = document.getElementById("suggestTranslation");
+	    if (x.style.display === "none") {
+	        x.style.display = "block";
+	    } else {
+	        x.style.display = "none";
+	    }
+	}
 </script>

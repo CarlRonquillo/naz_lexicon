@@ -9,7 +9,7 @@
 
 		public function get_BaseID($Baseform)
 		{
-			$query = $this->db->get_where('baseform', array('BaseName' => $Baseform));
+			$query = $this->db->get_where('baseform', array('BaseName' => $Baseform, 'Deleted' => 0));
 			return $query->row()->BaseFormID;
 		}
 
@@ -329,7 +329,7 @@
 
 		public function save_term($data,$baseID)
 		{
-			$term = array('TermName' => $data['TermName'],'Coreterm' => $data['CoreTerm'],'GlossaryEntry' => $data['GlossaryEntry'],'CommonUsage' => $data['CommonUsage']);
+			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry'],'CommonUsage' => $data['CommonUsage']);
 			$this->db->insert('term',$term);
 
 			$TermID = $this->db->insert_id();
@@ -342,6 +342,29 @@
 
 			$context = array('FKTermID' => $TermID,'ContextValue' => $data['ContextValue']);
 			return $this->db->insert('context',$context);
+		}
+
+		public function save_suggestedTranslation($searchedTerm,$translationID,$translation)
+		{
+			$TermID = '';
+			$this->db->select('TermID');
+			$this->db->from('Term');
+			$this->db->where('TermName', $searchedTerm);
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+			{
+				$TermID = $query->row()->TermID;
+			}
+
+			if(isset($TermID))
+			{
+				$suggestion = array('FKTermID' => $TermID,'FKLanguageID' => $translationID,'Translation' => $translation);
+				return $this->db->insert('suggestedtranslation',$suggestion);
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public function update_term($data,$termID)
