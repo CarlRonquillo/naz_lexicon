@@ -80,7 +80,7 @@
                             $PartOf_Speech = array();
                             foreach($partofspeech as $speech)
                             {
-                                $PartOf_Speech[$speech->PartOfSpeechID]=$speech->partofspeechvalue;
+                                $PartOf_Speech[$speech->PartOfSpeechID]=$speech->PartOfSpeechValue;
                             }
                                 echo form_dropdown(['name' => 'partofspeech', 'class' => 'form-control','autocomplete' => 'off'],$PartOf_Speech,$PartOfSpeechID);
                         ?>
@@ -148,7 +148,7 @@
 	                        <td><?php echo $count++; ?></td>
 	                        <td><a style="cursor:pointer" data-value ="<?php echo $Inflection->InflectionID; ?>" onclick="insertParam(this,'inflection')"><?php echo $Inflection->InflectionName; ?></a>
                             <!--<?php echo anchor("home/edit_host/",$Inflection->InflectionName);?></td>-->
-	                        <td><?php echo $Inflection->partofspeechvalue; ?></td>
+	                        <td><?php echo $Inflection->PartOfSpeechValue; ?></td>
                             <td><?php echo anchor("home/delete_baseform/{$Inflection->InflectionID}/inflection/InflectionID","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>
 	                    </tr>
 	                    <?php } else: ?>
