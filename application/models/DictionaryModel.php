@@ -464,7 +464,7 @@
 		{
 			$this->db->select('*');
 			$this->db->from('translation');
-			$this->db->join('languages', 'languages.LanguageID = translation.FKLanguageID','left');
+			$this->db->join('languages', 'languages.LanguageID = translation.FKLanguageID');
 			$this->db->where('FKTermID', $termID);
 			$this->db->where('translation.Deleted', 0);
 			$this->db->order_by('Translation', 'ASC');
