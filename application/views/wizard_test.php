@@ -99,7 +99,7 @@
                                                     $PartOf_Speech = array();
                                                     foreach($partofspeech as $speech)
                                                         {
-                                                          $PartOf_Speech[$speech->PartOfSpeechID]=$speech->partofspeechValue;
+                                                          $PartOf_Speech[$speech->PartOfSpeechID]=$speech->partofspeechvalue;
                                                         }
                                                     echo form_dropdown(['name' => 'partofspeech', 'class' => 'form-control',
                                                                         'autocomplete' => 'off'],$PartOf_Speech);
@@ -145,7 +145,7 @@
                                             <tr>
                                                 <td><?php echo $count++; ?></td>
                                                 <td><?php echo anchor("home/edit_host/",$Inflection->InflectionName);?></td>
-                                                <td><?php echo $Inflection->partofspeechValue; ?></td>
+                                                <td><?php echo $Inflection->partofspeechvalue; ?></td>
                                             </tr>
                                         <?php } else: ?>
                                             <tr>No Records Found!</tr>
