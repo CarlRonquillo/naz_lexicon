@@ -254,7 +254,10 @@
 
 		public function search_terms($searched_item)
 		{
-			$this->db->select('*');
+			$this->db->select("*,(select GROUP_CONCAT(BaseName SEPARATOR ', ') from baseform a
+							Inner join termhasbaseform b ON b.FKBaseValueID = a.BaseFormID
+							left join term c ON c.TermID = b.FKTermID
+							where c.TermID = term.TermID) as Basenames");
 			$this->db->from('term');
 			$this->db->join('termhasbaseform', 'termhasbaseform.FKTermID = term.TermID','left');
 			$this->db->join('baseform', 'baseform.BaseFormID = termhasbaseform.FKBaseValueID','left');
