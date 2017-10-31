@@ -341,7 +341,7 @@
 			$termhasbaseform = array('FKBaseValueID' => $baseID,'FKTermID' => $TermID);
 			$this->db->insert('termhasbaseform',$termhasbaseform);
 
-			$essay = array('Title' => $data['Title'],'DocumentReference' => $data['DocumentReference'], 'FKTermID' => $TermID, 'Note' => $data['Note']);
+			$essay = array('Title' => $data['Title'],'DocumentReference' => $data['DocumentReference'], 'FKTermID' => $TermID, 'Note' => $data['Note'], 'ManualReference' => $data['ManualReference']);
 			$this->db->insert('essay',$essay);
 
 			$context = array('FKTermID' => $TermID,'ContextValue' => $data['ContextValue']);
@@ -377,7 +377,7 @@
 			$this->db->where('TermID', $termID);
 			$this->db->update('term', $term); 
 
-			$essay = array('Title' => $data['Title'],'DocumentReference' => $data['DocumentReference'], 'Note' => $data['Note']);
+			$essay = array('Title' => $data['Title'],'DocumentReference' => $data['DocumentReference'], 'Note' => $data['Note'],'ManualReference' => $data['ManualReference']);
 			$this->db->where('FKTermID', $termID);
 			$this->db->update('essay', $essay);
 
