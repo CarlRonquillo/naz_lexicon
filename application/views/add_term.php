@@ -11,6 +11,7 @@
                 $DocumentReference = $record->DocumentReference;
                 $ContextValue = $record->ContextValue;
                 $Note= $record->Note;
+                $ManualReference = $record->ManualReference;
             }
             else
             {
@@ -21,6 +22,7 @@
                 $DocumentReference = "";
                 $ContextValue = "";
                 $Note = "";
+                $ManualReference = "";
             }
 
             if($_GET['term'] == 0)
@@ -114,6 +116,16 @@
                                                     'autocomplete' => 'off','maxlength' => 50],$DocumentReference); ?>
                                             </div>
                                             <span><?php echo form_error('DocumentReference') ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label for="ManualReference" class="col-lg-3 control-label">Manual Ref</label>
+                                            <div class="col-lg-8">
+                                                <?php echo form_input(['type' => 'text','name' => 'ManualReference', 'class' => 'form-control',
+                                                    'autocomplete' => 'off','maxlength' => 30],$ManualReference); ?>
+                                            </div>
+                                            <span><?php echo form_error('ManualReference') ?></span>
                                         </div>
                                     </div>
                                     <div class="row">
