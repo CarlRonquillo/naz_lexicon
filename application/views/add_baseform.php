@@ -65,16 +65,22 @@
             <div class="row">
                 <div class="form-group">
                     <label for="InflectionName" class="col-lg-3 control-label">Inflection</label>
-                    <div class="col-lg-8">
+                    <div class="col-lg-7">
                         <?php echo form_input(['type' => 'text','name' => 'InflectionName', 'class' => 'form-control',
                                                     'autocomplete' => 'off','maxlength' => 50],$Inflection); ?>
                     </div>
                     <span><?php echo form_error('InflectionName') ?></span>
+                    <div class="col-lg-1">
+                        <?php echo form_button(['type' => 'submit','content' => "<i class='glyphicon glyphicon-floppy-disk'></i>", 'class' => 'btn btn-primary round', "title" => "Save Inflection"]); ?>
+                    </div>
+                    <div class="col-lg-1">
+                        <a id="TermName" title="Clear Inflection" data-value ="0" onclick="insertParam(this,'inflection')" class="btn btn-primary round"><span class='btn-label'><i class='glyphicon glyphicon-refresh'></i></a>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label for="partofspeech" class="col-lg-3 control-label">Part of Speech</label>
+                    <!--<label for="partofspeech" class="col-lg-3 control-label">Part of Speech</label>
                         <div class="col-lg-4">
                         <?php
                             $PartOf_Speech = array();
@@ -84,13 +90,8 @@
                             }
                                 echo form_dropdown(['name' => 'partofspeech', 'class' => 'form-control','autocomplete' => 'off'],$PartOf_Speech,$PartOfSpeechID);
                         ?>
-                        </div>
-                	<div class="col-lg-1">
-                        <?php echo form_button(['type' => 'submit','content' => "<i class='glyphicon glyphicon-floppy-disk'></i>", 'class' => 'btn btn-primary round', "title" => "Save Inflection"]); ?>
-                    </div>
-                    <div class="col-lg-1">
-                        <a id="TermName" title="Clear Inflection" data-value ="0" onclick="insertParam(this,'inflection')" class="btn btn-primary round"><span class='btn-label'><i class='glyphicon glyphicon-refresh'></i></a>
-                    </div>
+                        </div>-->
+
                 </div>
         	</div>
                 <?php echo form_close(); ?>
@@ -136,7 +137,7 @@
                 	<tr>
 	                    <th>#</th>
 	                    <th>Inflection</th>
-	                    <th>Part of Speech</th>
+	                    <!--<th>Part of Speech</th>-->
                         <th></th>
                     </tr>
                 </thead>
@@ -148,7 +149,7 @@
 	                        <td><?php echo $count++; ?></td>
 	                        <td><a style="cursor:pointer" data-value ="<?php echo $Inflection->InflectionID; ?>" onclick="insertParam(this,'inflection')"><?php echo $Inflection->InflectionName; ?></a>
                             <!--<?php echo anchor("home/edit_host/",$Inflection->InflectionName);?></td>-->
-	                        <td><?php echo $Inflection->PartOfSpeechValue; ?></td>
+	                        <!--<td><?php echo $Inflection->PartOfSpeechValue; ?></td>-->
                             <td><?php echo anchor("home/delete_baseform/{$Inflection->InflectionID}/inflection/InflectionID","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>
 	                    </tr>
 	                    <?php } else: ?>

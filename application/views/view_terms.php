@@ -40,7 +40,7 @@
 				    <tr>
 				      <th>#</th>
 				      <th>Term</th>
-				      <th>Base Form</th>
+				      <th>Base Forms</th>
 				      <th>Glossary Entry</th>
 				      <th>Reference</th>
 				      <th></th>
@@ -53,7 +53,7 @@
 			    			<tr>
 			    				<td><?php echo $count++; ?></td>
 			    				<td><?php echo anchor("home/Term?baseForm={$term->BaseFormID}&term={$term->TermID}",$term->TermName);?></td>
-			    				<td><?php echo $term->BaseName; ?></td>
+			    				<td><?php echo $term->Basenames; ?></td>
 			    				<td><?php echo $term->GlossaryEntry; ?></td>
 			    				<td><?php echo $term->DocumentReference; ?></td>
 			    				<td><?php echo anchor("home/delete_term/{$term->TermID}/term/TermID/1","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>

@@ -121,7 +121,6 @@ class Home extends CI_Controller {
         }
 
         return redirect("home/BaseForm?baseForm={$baseForm}&inflection=0");
-        //$this->load->view('wizard_test',$data);
 	}
 
 	public function save_suggestTranslation($searchedTerm,$translationID)
@@ -183,7 +182,6 @@ class Home extends CI_Controller {
         
         //$baseForm = $this->DictionaryModel->get_latestID('baseform','BaseFormID');
         return redirect("home/BaseForm?baseForm={$baseID}&inflection={$inflectionID}");
-        //$this->load->view('wizard_test',$data);
 	}
 
 	public function save_Term($baseID,$termID)
@@ -234,7 +232,6 @@ class Home extends CI_Controller {
         
         //$baseForm = $this->DictionaryModel->get_latestID('baseform','BaseFormID');
         return redirect("home/Term?baseForm={$baseID}&term={$termID}");
-        //$this->load->view('wizard_test',$data);
 	}
 
 	public function save_Translation($baseID,$termID,$translationID)
@@ -272,7 +269,6 @@ class Home extends CI_Controller {
         
         //$baseForm = $this->DictionaryModel->get_latestID('baseform','BaseFormID');
         return redirect("home/Translation?baseForm={$baseID}&term={$termID}&translation={$translationID}");
-        //$this->load->view('wizard_test',$data);
 	}
 
 	public function search()
@@ -302,7 +298,7 @@ class Home extends CI_Controller {
 		else if($promptResult == '3')
 		{
 			$url = base_url('index.php/home/BaseForm?baseForm=0&inflection=0');
-			$data['prompt'] = "<h3>Sorry, this term has no baseform!</h3><p><i><a href='{$url}'>add baseform here.</a></i></p>";
+			$data['prompt'] = "<h3>Sorry, this term has no baseform!</h3><p><i><a id='adminOnly' href='{$url}'>add baseform here.</a></i></p>";
 		}
 
 		$this->load->view('dictionary',$data);

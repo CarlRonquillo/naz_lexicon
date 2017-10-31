@@ -58,7 +58,7 @@
 			    	</div>
 			    </div>
 	    	</div>
-	    	<div class="row">
+	    	<!--<div class="row">
 		    	<div class="form-group col-md-12">
 			    	<div class="radio">
 						<label class="col-md-2">
@@ -73,7 +73,7 @@
 						</label>
 					</div>
 			    </div>
-		    </div>
+		    </div>-->
 		    <div style="display:<?php echo $display;?>">
 			<div class="col-md-8">
 				<div class="row">
@@ -94,32 +94,47 @@
 				    <div class="panel-heading">
 				      	<h4 class="panel-title">
 				        	<a class="accordion-toggle collapsed" data-toggle="collapse" href="#<?php echo $record->TermID; ?>">
-				          		<?php echo $record->TermName; ?> (part of speech) - <i><b><?php echo $record->Translation; ?></b></i>
+				          		<?php echo $record->TermName; ?> - <i><b><?php echo $record->Translation; ?></b></i>
 				        	</a>
 				     	</h4>
 				    </div>
 			    <div id="<?php echo $record->TermID; ?>" class="panel-collapse collapse">
 			      <div class="panel-body">
-			        <p><?php echo $record->GlossaryEntry; ?> 
-			        <br><a>edit</a></p>
+			      	<?php if(!empty($record->GlossaryEntry)) { ?>
+				        <p><?php echo $record->GlossaryEntry; ?> 
+				        <br><a id="adminOnly">edit</a></p>
+			        <?php } ?>
 
-			        <p><i>Ref: </i><?php echo $record->DocumentReference; ?> 
-			        <br><a>edit</a></p>
+			        <?php if(!empty($record->DocumentReference)) { ?>
+				        <p><i>Ref: </i><?php echo $record->DocumentReference; ?> 
+				        <br><a id="adminOnly">edit</a></p>
+			        <?php } ?>
 
-			        <p><i>Note: </i><?php echo $record->Note; ?> <br>
-			        <a>edit</a><a>reply</a><a>add a new note</a></p>
+			        <?php if(!empty($record->Note)) { ?>
+				        <p><i>Note: </i><?php echo $record->Note; ?> <br>
+				        <a id="adminOnly">edit</a><a id="adminOnly">reply</a><a id="adminOnly">add a new note</a></p>
+			        <?php } ?>
 
-			        <p><i>Context: </i><?php echo $record->ContextValue; ?> 
-			        <br><a>edit</a></p>
+			        <?php if(!empty($record->ContextValue)) { ?>
+				        <p><i>Context: </i><?php echo $record->ContextValue; ?> 
+				        <br><a id="adminOnly">edit</a></p>
+			        <?php } ?>
 
-			        <p><i>Common Usage: </i><?php echo $record->CommonUsage; ?> 
-			        <br><a>edit</a></p>
+			        <?php if(!empty($record->CommonUsage)) { ?>
+				        <p><i>Common Usage: </i><?php echo $record->CommonUsage; ?> 
+				        <br><a id="adminOnly">edit</a></p>
+			        <?php } ?>
 
-			        <p><i>Core Term: </i><?php echo $record->CoreTerm; ?> 
-			        <br><a>edit</a></p>
+			        <?php if(!empty($record->CoreTerm)) { ?>
+				        <p><i>Core Term: </i><?php echo $record->CoreTerm; ?> 
+				        <br><a id="adminOnly">edit</a></p>
+			        <?php } ?>
 
-			        <p><i>Faux Amis: </i><?php echo $record->FauxAmis; ?> 
-			        <br><a>edit</a></p>
+			        <?php if(!empty($record->FauxAmis)) { ?>
+				        <p><i>Faux Amis: </i><?php echo $record->FauxAmis; ?> 
+				        <br><a id="adminOnly">edit</a></p>
+			        <?php } ?>
+
 			      </div>
 			    </div>
 			  </div>
@@ -133,18 +148,47 @@
 								    <div class="panel-heading">
 								      	<h4 class="panel-title">
 								        	<a class="accordion-toggle collapsed" data-toggle="collapse" href="#<?php echo $record->TermID; ?>">
-								          		<?php echo $record->TermName; ?> (part of speech) - <i><b><?php echo $record->Translation; ?></b></i>
+								          		<?php echo $record->TermName; ?> - <i><b><?php echo $record->Translation; ?></b></i>
 								        	</a>
 								     	</h4>
 								    </div>
 							    <div id="<?php echo $record->TermID; ?>" class="panel-collapse collapse">
 							      <div class="panel-body">
-							        <p><?php echo $record->GlossaryEntry; ?> 
-							        <br><a>edit</a></p>
-							        <p>REF: <?php echo $record->DocumentReference; ?> 
-							        <br><a>edit</a></p>
-							        <p>NOTE: <?php echo $record->Note; ?> <br>
-							        <a>edit</a><a>reply</a><a>add a new note</a></p>
+							      	<?php if(!empty($record->GlossaryEntry)) { ?>
+								        <p><?php echo $record->GlossaryEntry; ?> 
+								        <br><a id="adminOnly">edit</a></p>
+							        <?php } ?>
+
+							        <?php if(!empty($record->DocumentReference)) { ?>
+								        <p><i>Ref: </i><?php echo $record->DocumentReference; ?> 
+								        <br><a id="adminOnly">edit</a></p>
+							        <?php } ?>
+
+							        <?php if(!empty($record->Note)) { ?>
+								        <p><i>Note: </i><?php echo $record->Note; ?> <br>
+								        <a id="adminOnly">edit</a><a id="adminOnly">reply</a><a id="adminOnly">add a new note</a></p>
+							        <?php } ?>
+
+							        <?php if(!empty($record->ContextValue)) { ?>
+								        <p><i>Context: </i><?php echo $record->ContextValue; ?> 
+								        <br><a id="adminOnly">edit</a></p>
+							        <?php } ?>
+
+							        <?php if(!empty($record->CommonUsage)) { ?>
+								        <p><i>Common Usage: </i><?php echo $record->CommonUsage; ?> 
+								        <br><a id="adminOnly">edit</a></p>
+							        <?php } ?>
+
+							        <?php if(!empty($record->CoreTerm)) { ?>
+								        <p><i>Core Term: </i><?php echo $record->CoreTerm; ?> 
+								        <br><a id="adminOnly">edit</a></p>
+							        <?php } ?>
+
+							        <?php if(!empty($record->FauxAmis)) { ?>
+								        <p><i>Faux Amis: </i><?php echo $record->FauxAmis; ?> 
+								        <br><a id="adminOnly">edit</a></p>
+							        <?php } ?>
+							        
 							      </div>
 							    </div>
 							  </div>
@@ -236,4 +280,13 @@
 	        x.style.display = "none";
 	    }
 	}
+
+	$( document ).ready(function() {
+	    var x = document.getElementById("adminOnly");
+	    var admin = 0;
+	    if(!admin)
+	    {
+		    x.style.display = "none";
+	    }
+	});
 </script>

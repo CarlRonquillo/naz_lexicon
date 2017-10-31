@@ -66,6 +66,7 @@
 			$this->db->join('languages', 'languages.LanguageID = translation.FKLanguageID','inner');
 			$this->db->where('term.TermName',$Searched_term);
 			$this->db->or_where('inflection.InflectionName',$Searched_term);
+			$this->db->or_where('baseform.BaseName',$Searched_term);
 			$this->db->where('languages.LanguageID', $languageID);
 			$this->db->where('term.Deleted', 0);
 			$query = $this->db->get();
@@ -233,7 +234,10 @@
 
 		public function get_terms()
 		{
-			$this->db->select('*');
+			$this->db->select("*,(select GROUP_CONCAT(BaseName SEPARATOR ', ') from baseform a
+							Inner join termhasbaseform b ON b.FKBaseValueID = a.BaseFormID
+							left join term c ON c.TermID = b.FKTermID
+							where c.TermID = term.TermID) as Basenames");
 			$this->db->from('term');
 			$this->db->join('termhasbaseform', 'termhasbaseform.FKTermID = term.TermID','left');
 			$this->db->join('baseform', 'baseform.BaseFormID = termhasbaseform.FKBaseValueID','left');
@@ -329,7 +333,7 @@
 
 		public function save_term($data,$baseID)
 		{
-			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry'],'CommonUsage' => $data['CommonUsage']);
+			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry']);
 			$this->db->insert('term',$term);
 
 			$TermID = $this->db->insert_id();
@@ -369,7 +373,7 @@
 
 		public function update_term($data,$termID)
 		{
-			$term = array('TermName' => $data['TermName'],'Coreterm' => $data['CoreTerm'],'GlossaryEntry' => $data['GlossaryEntry'],'CommonUsage' => $data['CommonUsage']);
+			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry']);
 			$this->db->where('TermID', $termID);
 			$this->db->update('term', $term); 
 

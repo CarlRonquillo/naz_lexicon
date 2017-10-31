@@ -84,10 +84,10 @@
                         <?php echo form_input(['type' => 'text','name' => 'GlossaryEntry', 'class' => 'form-control',
                                                     'autocomplete' => 'off','maxlength' => 50],$GlossaryEntry); ?>
                     </div>
-                                            <span><?php echo form_error('GlossaryEntry') ?></span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
+                    <span><?php echo form_error('GlossaryEntry') ?></span>
+                </div>
+            </div>
+                                    <!--<div class="row">
                                         <div class="form-group">
                                             <label for="CommonUsage" class="col-lg-3 control-label">Common Usage</label>
                                             <div class="col-lg-8">
@@ -95,7 +95,7 @@
                                             </div>
                                             <span><?php echo form_error('CommonUsage') ?></span>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="row">
                                         <div class="form-group">
                                             <label for="Title" class="col-lg-3 control-label">Title</label>
@@ -158,7 +158,7 @@
                                       <th>#</th>
                                       <th>Term</th>
                                       <th>Glossary Entry</th>
-                                      <th>Common Usage</th>
+                                      <!--<th>Common Usage</th>-->
                                       <th></th>
                                     </tr>
                                 </thead>
@@ -171,7 +171,7 @@
                                                 <td><a style="cursor:pointer" data-value ="<?php echo $Term->TermID; ?>" onclick="insertParam(this,'term')"><?php echo $Term->TermName; ?></a>
                                                 <!--<?php echo anchor("",$Term->TermName,array('data-value' => '{$Term->TermID}', 'onclick' => "insertParam(this,'term')"));?>--></td>
                                                 <td><?php echo $Term->GlossaryEntry; ?></td>
-                                                <td><?php echo $Term->CommonUsage; ?></td>
+                                                <!--<td><?php echo $Term->CommonUsage; ?></td>-->
                                                 <td><?php echo anchor("home/delete_term/{$Term->TermID}/term/TermID/0/{$_GET['baseForm']}","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>
                                             </tr>
                                         <?php } else: ?>
