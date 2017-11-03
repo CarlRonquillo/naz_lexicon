@@ -50,6 +50,7 @@
 		{
 			$this->db->distinct();
 			$this->db->select('*');
+			$this->db->order_by('Language', 'ASC');
 			$query = $this->db->get('languages');
 			return $query->result();
 		}

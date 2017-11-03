@@ -1,7 +1,7 @@
 <?php include('header.php'); ?>
 
 	<div class="container">
-		<div style ="width:80%;margin:auto;">
+		<div style ="width:90%;margin:auto;">
 			<?php
 				if(isset($_GET['search']))
 				{
