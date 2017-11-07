@@ -193,9 +193,10 @@
                             </table>
                         </div>
         <div class="row">
-            <div class="col-md-3 col-md-offset-9">
-                <?php echo anchor("home/BaseForm?baseForm={$_GET['baseForm']}&inflection=0","Base Form",["class"=>"col-md-5 btn btn-default","title" => "Add Translation"]); ?>
-                <?php echo anchor("home/Translation?baseForm={$_GET['baseForm']}&term={$first_TermID}&translation=0","Translation",["class"=>"col-md-6 col-md-offset-1 btn btn-primary","title" => "Add Translation"]); ?>
+            <div class="col-md-6 col-md-offset-6">
+                <?php echo anchor("home/Existing_Term","Link Existing Term",["class"=>"col-md-4 btn","title" => "Link baseform to existing term"]); ?>
+                <?php echo anchor("home/BaseForm?baseForm={$_GET['baseForm']}&inflection=0","Base Form",["class"=>"col-md-3 btn btn-default","title" => "Add Baseform"]); ?>
+                <?php echo anchor("home/Translation?baseForm={$_GET['baseForm']}&term={$first_TermID}&translation=0","Translation",["class"=>"col-md-4 col-md-offset-1 btn btn-primary","title" => "Add Translation"]); ?>
             </div>
         </div><br>
     </div>

@@ -77,6 +77,20 @@
 			}
 		}
 
+		public function search_existing_term($Searched_term)
+		{
+			$this->db->select('term.TermID,term.TermName,term.GlossaryEntry');
+			$this->db->from('term');
+			$this->db->join('termhasbaseform', 'termhasbaseform.FKTermID = term.TermID');
+			$this->db->like('term.TermName',$Searched_term);
+			$this->db->where('term.Deleted', 0);
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+			{
+				return $query->result();
+			}
+		}
+
 		public function baseform_get_term($baseFormID,$languageID)
 		{
 			$this->db->select('*');
@@ -199,6 +213,22 @@
 			}
 		}
 
+		public function get_Terms_forTermHasBase($baseFormID)
+		{
+			$this->db->select('*');
+			$this->db->from('baseform');
+			$this->db->join('termhasbaseform', 'termhasbaseform.FKBaseValueID = baseform.BaseFormID');
+			$this->db->join('term', 'term.TermID = termhasbaseform.FKTermID');
+			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
+			$this->db->join('context', 'context.FKTermID = term.TermID','left');
+			$this->db->where('termhasbaseform.FKBaseValueID !=',$baseFormID);
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+			{
+				return $query->result();
+			}
+		}
+
 		public function get_SingleTerm($termID)
 		{
 			$this->db->select('*');
@@ -294,6 +324,21 @@
 		public function saveRecord($data,$tableName)
 		{
 			return $this->db->insert($tableName,$data);
+		}
+
+		public function isTermhasBaseExist($baseID,$termID)
+		{
+			$this->db->where('termhasbaseform.FKBaseValueID',$baseID);
+			$this->db->where('termhasbaseform.FKTermID',$termID);
+			$query = $this->db->get('termhasbaseform');
+			if($query->num_rows() > 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public function save_inflection($inflectionName,$baseID,$partofspeech)
@@ -500,6 +545,11 @@
 		public function deleteRecord($record_id ,$data,$tableName,$fieldName)
 		{
 			return $this->db->where($fieldName,$record_id)->update($tableName,$data);
+		}
+
+		public function permanent_del($data,$tableName)
+		{
+			return $this->db->delete($tableName, $data);
 		}
 	}
 

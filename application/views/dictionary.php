@@ -107,7 +107,7 @@
 
 			        <?php if(!empty($record->DocumentReference)) { ?>
 				        <p><i>Ref: </i><?php echo $record->DocumentReference; ?> 
-				        <br><a id="adminOnly">edit</a></p>
+				        <br><a name="adminOnly">edit</a></p>
 			        <?php } ?>
 
 			        <?php if(!empty($record->Note)) { ?>
@@ -282,11 +282,18 @@
 	}
 
 	$( document ).ready(function() {
-	    var x = document.getElementById("adminOnly");
+		var x = document.getElementsByName("adminOnly");
 	    var admin = 0;
-	    if(!admin)
-	    {
-		    x.style.display = "none";
-	    }
+	    var i;
+		for (i = 0; i < x.length; i++) {
+			if(admin)
+			{
+		    	x[i].style.display = "none";
+			}
+			else
+			{
+				x[i].style.display = "block";
+			}
+		}
 	});
 </script>

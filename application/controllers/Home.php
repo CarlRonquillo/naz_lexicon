@@ -381,15 +381,75 @@ class Home extends CI_Controller {
         return redirect("home/BaseForm?baseForm={$baseForm}&inflection=0");
 	}
 
-	public function Edit_Term($termID)
+	public function existing_term_search()
 	{
 		$this->load->model('DictionaryModel');
 		$baseID = $this->input->get('baseForm');
+		$searched_item = $this->input->get('search');
+		
 		$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
 		$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
-		$data['baseID'] = $baseID;
-		$data['first_TermID'] =  $this->DictionaryModel->get_first_termID($baseID);
-		$this->load->view('edit_term',$data);
+		$data['termNames'] = $this->DictionaryModel->get_TermNames();
+		$data['Searched_Terms'] = $this->DictionaryModel->search_existing_term($searched_item);
+
+		$this->load->view('existing_term',$data);
+	}
+
+	public function Existing_Term()
+	{
+		$this->load->model('DictionaryModel');
+		$baseID = $this->input->get('baseForm');
+		
+		$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
+		$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
+		$data['termNames'] = $this->DictionaryModel->get_TermNames();
+
+		$this->load->view('existing_term',$data);
+	}
+
+	public function add_BaseformHasTerm($termID,$baseID,$searchTerm)
+	{
+		$this->load->model('DictionaryModel');
+
+		if(!$this->DictionaryModel->isTermhasBaseExist($baseID,$termID))
+		{
+			$data['FKBaseValueID'] = $baseID;
+			$data['FKTermID'] = $termID;
+			if($this->DictionaryModel->saveRecord($data,'termhasbaseform'))
+		    {
+		        $this->session->set_flashdata('response','Record successfully saved.');
+		    }
+		    else
+		    {
+				$this->session->set_flashdata('response','Record was not saved.');
+			}
+		}
+		else
+		{
+			$this->session->set_flashdata('class','text-danger');
+			$this->session->set_flashdata('response','Record was not saved. Record already exist!');
+		}
+
+		return redirect("home/existing_term_search?search={$searchTerm}&baseForm={$baseID}");
+	}
+
+	public function delete_BaseformHasTerm($termID,$baseID,$searchTerm)
+	{
+		$this->load->model('DictionaryModel');
+
+		$data['FKBaseValueID'] = $baseID;
+		$data['FKTermID'] = $termID;
+
+		if($this->DictionaryModel->permanent_del($data,'termhasbaseform'))
+	    {
+	        $this->session->set_flashdata('response','Record successfully deleted.');
+	    }
+	    else
+	    {
+			$this->session->set_flashdata('response','Record was not deleted.');
+		}
+
+		return redirect("home/existing_term_search?search={$searchTerm}&baseForm={$baseID}");
 	}
 
 }
