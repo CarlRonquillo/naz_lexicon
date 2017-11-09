@@ -283,16 +283,16 @@
 
 	$( document ).ready(function() {
 		var x = document.getElementsByName("adminOnly");
-	    var admin = 0;
+	    var admin = <?php echo (null!==($this->session->userdata('Username')) ? '1' : '0' )?>;
 	    var i;
 		for (i = 0; i < x.length; i++) {
 			if(admin)
 			{
-		    	x[i].style.display = "none";
+		    	x[i].style.display = "block";
 			}
 			else
 			{
-				x[i].style.display = "block";
+				x[i].style.display = "none";
 			}
 		}
 	});

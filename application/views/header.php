@@ -25,16 +25,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <ul class="nav navbar-nav navbar-right">
         <li class="active"><?php echo anchor("home/index","Home"); ?></li>
         <li><a href="#">Dictionary<span class="sr-only">(current)</span></a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin<span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><?php echo anchor("#","Accounts") ?></li>
-            <li><?php echo anchor("home/Terms","Terms") ?></li>
-            <li><?php echo anchor("#","Sign Up") ?></li>
-            <li class="divider"></li>
-            <li><?php echo anchor("#","Logout") ?></li>
-          </ul>
-        </li>
+
+        <?php if(!empty($this->session->userdata('Username')))
+          { ?>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+              <?php echo $this->session->userdata('FirstName').' '.$this->session->userdata('LastName'); ?>
+              <span class="caret"></span>
+            </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><?php echo anchor("#","Accounts") ?></li>
+                <li><?php echo anchor("home/Terms","Terms") ?></li>
+                <li><?php echo anchor("home/SignUp","Sign Up") ?></li>
+                <li class="divider"></li>
+                <li><?php echo anchor("home/logout","Logout") ?></li>
+              </ul>
+          </li>
+        <?php } else { ?>
+          <li><?php echo anchor("home/login","Login"); ?></li>
+        <?php } ?>
       </ul>
     </div>
   </div>

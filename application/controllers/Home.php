@@ -12,6 +12,78 @@ class Home extends CI_Controller {
 		$this->load->view('dictionary',$data);
 	}
 
+	public function Login()
+	{
+		$this->load->view('login');
+	}
+
+	public function Logout()
+	{
+		$this->session->sess_destroy();
+		redirect('home/index');
+	}
+
+	public function SignUp()
+	{
+		$this->load->view('sign_up');
+	}
+
+	public function login_validation()
+	{
+		$this->form_validation->set_rules('Username','Username','required');
+		$this->form_validation->set_rules('Password','Password','required');
+		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
+
+		if ($this->form_validation->run())
+        {
+        	$username = $this->input->post('Username');
+        	$password = $this->input->post('Password');
+
+        	$this->load->model('DictionaryModel');
+        	if($this->DictionaryModel->can_login($username,$password))
+        	{
+        		$session_data = $this->DictionaryModel->user_details($username,$password);
+        		$this->session->set_userdata($session_data);
+        		redirect('home/index');
+        	}
+        	else
+        	{
+        		$this->session->set_flashdata('response','Username or Password is Invalid!');
+        		redirect('home/Login');
+        	}
+        }
+        else
+        {
+        	$this->Login();
+        }
+	}
+
+	public function save_Account()
+	{
+		$this->form_validation->set_rules('FirstName', 'First name', 'required');
+		$this->form_validation->set_rules('Username', 'User name', 'required');
+		$this->form_validation->set_rules('Password', 'Password', 'required');
+		$this->form_validation->set_rules('PassConf', 'Password Confirmation', 'required|matches[Password]');
+		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
+		$this->load->model('DictionaryModel');
+		$data = $this->input->post();
+
+		if ($this->form_validation->run())
+        {
+        	unset($data['PassConf']);
+        	if($this->DictionaryModel->saveRecord($data,'accounts'))
+	        {
+	           	$this->session->set_flashdata('response','Record successfully saved.');
+	        }
+	        else
+	        {
+				$this->session->set_flashdata('response','Record was not saved.');
+	        }
+        }
+
+        $this->SignUp();
+	}
+
 	public function Terms()
 	{
 		$this->load->model('DictionaryModel');
