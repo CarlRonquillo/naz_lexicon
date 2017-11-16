@@ -68,7 +68,7 @@
                                     
             <div class="row">
                 <div class="form-group">
-                <label for="TermName" class="col-lg-3 control-label">Term Name</label>
+                <label for="TermName" class="col-lg-3 control-label">Term Name<label class='text-danger'>*</label></label>
                     <div class="col-lg-8">
                         <?php echo form_input(['type' => 'text','name' => 'TermName', 'class' => 'form-control',
                                                     'autocomplete' => 'off','maxlength' => 100],$TermName); ?>

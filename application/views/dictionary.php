@@ -101,40 +101,29 @@
 			    <div id="<?php echo $record->TermID; ?>" class="panel-collapse collapse">
 			      <div class="panel-body">
 			      	<?php if(!empty($record->GlossaryEntry)) { ?>
-				        <p><?php echo $record->GlossaryEntry; ?> 
-				        <br><a id="adminOnly">edit</a></p>
+				        <p><?php echo $record->GlossaryEntry; ?></p>
+			        <?php } ?>
+
+			        <?php if(!empty($record->Title)) { ?>
+				        <p><?php echo $record->Title; ?></p>
 			        <?php } ?>
 
 			        <?php if(!empty($record->DocumentReference)) { ?>
-				        <p><i>Ref: </i><?php echo $record->DocumentReference; ?> 
-				        <br><a name="adminOnly">edit</a></p>
-			        <?php } ?>
-
-			        <?php if(!empty($record->Note)) { ?>
-				        <p><i>Note: </i><?php echo $record->Note; ?> <br>
-				        <a id="adminOnly">edit</a><a id="adminOnly">reply</a><a id="adminOnly">add a new note</a></p>
+				        <p><i>Ref: </i><?php echo $record->DocumentReference; ?></p>
 			        <?php } ?>
 
 			        <?php if(!empty($record->ContextValue)) { ?>
-				        <p><i>Context: </i><?php echo $record->ContextValue; ?> 
-				        <br><a id="adminOnly">edit</a></p>
-			        <?php } ?>
-
-			        <?php if(!empty($record->CommonUsage)) { ?>
-				        <p><i>Common Usage: </i><?php echo $record->CommonUsage; ?> 
-				        <br><a id="adminOnly">edit</a></p>
-			        <?php } ?>
-
-			        <?php if(!empty($record->CoreTerm)) { ?>
-				        <p><i>Core Term: </i><?php echo $record->CoreTerm; ?> 
-				        <br><a id="adminOnly">edit</a></p>
+				        <p><i>Context: </i><?php echo $record->ContextValue; ?></p>
 			        <?php } ?>
 
 			        <?php if(!empty($record->FauxAmis)) { ?>
-				        <p><i>Faux Amis: </i><?php echo $record->FauxAmis; ?> 
-				        <br><a id="adminOnly">edit</a></p>
+				        <p><i>Faux Amis: </i><?php echo $record->FauxAmis; ?></p>
 			        <?php } ?>
 
+			        <?php if(!empty($record->Note)) { ?>
+				        <p><i>Note: </i><?php echo $record->Note; ?> <br></p>
+			        <?php } ?>
+				        <?php echo anchor("home/Suggest/{$record->TermID}",'edit',['id' => 'adminOnly']); ?>
 			      </div>
 			    </div>
 			  </div>
@@ -155,40 +144,29 @@
 							    <div id="<?php echo $record->TermID; ?>" class="panel-collapse collapse">
 							      <div class="panel-body">
 							      	<?php if(!empty($record->GlossaryEntry)) { ?>
-								        <p><?php echo $record->GlossaryEntry; ?> 
-								        <br><a id="adminOnly">edit</a></p>
+								        <p><?php echo $record->GlossaryEntry; ?></p>
+							        <?php } ?>
+
+							        <?php if(!empty($record->Title)) { ?>
+								        <p><?php echo $record->Title; ?></p>
 							        <?php } ?>
 
 							        <?php if(!empty($record->DocumentReference)) { ?>
-								        <p><i>Ref: </i><?php echo $record->DocumentReference; ?> 
-								        <br><a id="adminOnly">edit</a></p>
-							        <?php } ?>
-
-							        <?php if(!empty($record->Note)) { ?>
-								        <p><i>Note: </i><?php echo $record->Note; ?> <br>
-								        <a id="adminOnly">edit</a><a id="adminOnly">reply</a><a id="adminOnly">add a new note</a></p>
+								        <p><i>Ref: </i><?php echo $record->DocumentReference; ?></p>
 							        <?php } ?>
 
 							        <?php if(!empty($record->ContextValue)) { ?>
-								        <p><i>Context: </i><?php echo $record->ContextValue; ?> 
-								        <br><a id="adminOnly">edit</a></p>
-							        <?php } ?>
-
-							        <?php if(!empty($record->CommonUsage)) { ?>
-								        <p><i>Common Usage: </i><?php echo $record->CommonUsage; ?> 
-								        <br><a id="adminOnly">edit</a></p>
-							        <?php } ?>
-
-							        <?php if(!empty($record->CoreTerm)) { ?>
-								        <p><i>Core Term: </i><?php echo $record->CoreTerm; ?> 
-								        <br><a id="adminOnly">edit</a></p>
+								        <p><i>Context: </i><?php echo $record->ContextValue; ?></p>
 							        <?php } ?>
 
 							        <?php if(!empty($record->FauxAmis)) { ?>
-								        <p><i>Faux Amis: </i><?php echo $record->FauxAmis; ?> 
-								        <br><a id="adminOnly">edit</a></p>
+								        <p><i>Faux Amis: </i><?php echo $record->FauxAmis; ?></p>
 							        <?php } ?>
-							        
+
+							        <?php if(!empty($record->Note)) { ?>
+								        <p><i>Note: </i><?php echo $record->Note; ?> <br></p>
+							        <?php } ?>
+							        <?php echo anchor("home/Suggest/{$record->TermID}",'edit',['id' => 'adminOnly']); ?>
 							      </div>
 							    </div>
 							  </div>
@@ -233,9 +211,18 @@
 			    ?>
 		    	<div class= "well" id="suggestTranslation" style="display:none;">
 		    		<?php echo form_open("home/save_suggestTranslation/{$_GET['search']}/{$LanguageID}",['class' => 'form-horizontal','type' => 'POST']); ?>
+		    		<div class="row">
+                    	<div class="form-group">
+                        	<label for="SuggestedBy" class="col-lg-2 control-label">Full Name</label>
+                            	<div class="col-lg-7">
+                                	<?php echo form_input(['type' => 'text','name' => 'SuggestedBy', 'class' => 'form-control','autocomplete' => 'off']); ?>
+                                </div>
+                                <span><?php echo form_error('SuggestedBy') ?></span>
+                        </div>
+                    </div>
 					<div class="row">
                     	<div class="form-group">
-                        	<label for="suggested_Translation" class="col-lg-2 control-label">Translation:</label>
+                        	<label for="suggested_Translation" class="col-lg-2 control-label">Translation</label>
                             	<div class="col-lg-7">
                                 	<?php echo form_input(['type' => 'text','name' => 'suggested_Translation', 'class' => 'form-control','autocomplete' => 'off']); ?>
                                 </div>

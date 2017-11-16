@@ -17,6 +17,13 @@ class Home extends CI_Controller {
 		$this->load->view('login');
 	}
 
+	public function Suggest($termID)
+	{
+		$this->load->model('DictionaryModel');
+		$data['record'] = $this->DictionaryModel->get_SingleTerm($termID);
+		$this->load->view('suggest_term',$data);
+	}
+
 	public function Logout()
 	{
 		$this->session->sess_destroy();
@@ -60,7 +67,7 @@ class Home extends CI_Controller {
 
 	public function save_Account()
 	{
-		$this->form_validation->set_rules('FirstName', 'First name', 'required');
+		$this->form_validation->set_rules('SuggestedBy', 'First name', 'required');
 		$this->form_validation->set_rules('Username', 'User name', 'required');
 		$this->form_validation->set_rules('Password', 'Password', 'required');
 		$this->form_validation->set_rules('PassConf', 'Password Confirmation', 'required|matches[Password]');
@@ -82,6 +89,29 @@ class Home extends CI_Controller {
         }
 
         $this->SignUp();
+	}
+
+	public function save_suggestedTerm($TermID)
+	{
+		$this->form_validation->set_rules('SuggestedBy', 'Full name', 'required');
+		$this->form_validation->set_rules('Email', 'Email', 'required');
+		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
+		$this->load->model('DictionaryModel');
+		$data = $this->input->post();
+
+		if ($this->form_validation->run())
+        {
+        	if($this->DictionaryModel->saveRecord($data,'suggestedterms'))
+	        {
+	           	$this->session->set_flashdata('response','Suggestion successfully saved. Please take note that this suggestion is still subject for approval of the admin.');
+	        }
+	        else
+	        {
+				$this->session->set_flashdata('response','Suggestion was not saved.');
+	        }
+        }
+
+        return redirect("home/Suggest/{$TermID}");
 	}
 
 	public function Terms()
@@ -201,9 +231,10 @@ class Home extends CI_Controller {
 		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
 		$this->load->model('DictionaryModel');
 		$translation = $this->input->post('suggested_Translation');
+		$SuggestedBy = $this->input->post('SuggestedBy');
 		if ($this->form_validation->run())
         {
-			if($this->DictionaryModel->save_suggestedTranslation($searchedTerm,$translationID,$translation))
+			if($this->DictionaryModel->save_suggestedTranslation($searchedTerm,$translationID,$translation,$SuggestedBy))
 	        {
 	            $this->session->set_flashdata('suggestion_response','Suggestion was successfully saved. Please be advised that this suggestion would be subject for approval. Thank you!');
 	        }

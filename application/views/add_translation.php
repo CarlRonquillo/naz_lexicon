@@ -102,7 +102,7 @@
             </div>
 			<div class="row">
                 <div class="form-group">
-                    <label for="Translation" class="col-lg-3 control-label">Translation</label>
+                    <label for="Translation" class="col-lg-3 control-label">Translation<label class='text-danger'>*</label></label>
                     <div class="col-lg-8">
                         <?php echo form_input(['type' => 'text','name' => 'Translation', 'class' => 'form-control',
                                                     'autocomplete' => 'off','maxlength' => 100],$Translation); ?>

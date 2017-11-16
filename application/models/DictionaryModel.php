@@ -235,6 +235,7 @@
 			$this->db->from('term');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
+			$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
 			$this->db->where('term.TermID',$termID);
 			$this->db->where('term.Deleted', 0);
 			$query = $this->db->get();
@@ -397,7 +398,7 @@
 			return $this->db->insert('context',$context);
 		}
 
-		public function save_suggestedTranslation($searchedTerm,$translationID,$translation)
+		public function save_suggestedTranslation($searchedTerm,$translationID,$translation,$fullName)
 		{
 			$TermID = '';
 			$this->db->select('TermID');
@@ -411,7 +412,7 @@
 
 			if(isset($TermID))
 			{
-				$suggestion = array('FKTermID' => $TermID,'FKLanguageID' => $translationID,'Translation' => $translation);
+				$suggestion = array('FKTermID' => $TermID,'FKLanguageID' => $translationID,'Translation' => $translation,'SuggestedBy' => $fullName);
 				return $this->db->insert('suggestedtranslation',$suggestion);
 			}
 			else
