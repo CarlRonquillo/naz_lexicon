@@ -91,6 +91,22 @@
 			}
 		}
 
+		public function termExists($Searched_term,$languageID)
+		{
+			$this->db->select('term.TermID,baseform.BaseFormID');
+			$this->db->from('term');
+			$this->db->join('termhasbaseform', 'termhasbaseform.FKTermID = term.TermID');
+			$this->db->join('baseform', 'baseform.BaseFormID = termhasbaseform.FKBaseValueID');
+			$this->db->join('translation', 'translation.FKTermID = term.TermID');
+			$this->db->where('term.TermName',$Searched_term);
+			$this->db->where('term.Deleted', 0);
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+			{
+				return $query->row_array();
+			}
+		}
+
 		public function baseform_get_term($baseFormID,$languageID)
 		{
 			$this->db->select('*');
@@ -105,6 +121,7 @@
 			$this->db->where('baseform.BaseFormID',$baseFormID);
 			$this->db->where('languages.LanguageID', $languageID);
 			$this->db->where('baseform.Deleted', 0);
+            $this->db->where('translation.Deleted', 0);
 			$query = $this->db->get();
 			if($query->num_rows() > 0)
 			{
@@ -159,6 +176,7 @@
 			$this->db->where('baseform.BaseFormID',$baseFormID);
 			$this->db->where('languages.LanguageID', $languageID);
 			$this->db->where('baseform.Deleted', 0);
+            $this->db->where('translation.Deleted', 0);
 			$query = $this->db->get();
 			if($query->num_rows() > 0)
 			{
@@ -264,7 +282,7 @@
 			return $query->num_rows();
 		}
 
-		public function get_terms()
+		public function get_terms($languageID)
 		{
 			$this->db->select("*,(select GROUP_CONCAT(BaseName SEPARATOR ', ') from baseform a
 							Inner join termhasbaseform b ON b.FKBaseValueID = a.BaseFormID
@@ -275,7 +293,10 @@
 			$this->db->join('baseform', 'baseform.BaseFormID = termhasbaseform.FKBaseValueID','left');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
-			$this->db->where('term.Deleted','False');
+			$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
+			$this->db->where('translation.FKLanguageID',$languageID);
+			$this->db->where('term.Deleted',0);
+			$this->db->where('translation.Deleted',0);
 			$this->db->order_by('TermName', 'ASC');
 			$query = $this->db->get();
 			if($query->num_rows() > 0)
@@ -284,7 +305,7 @@
 			}
 		}
 
-		public function search_terms($searched_item)
+		public function search_terms($searched_item,$languageID)
 		{
 			$this->db->select("*,(select GROUP_CONCAT(BaseName SEPARATOR ', ') from baseform a
 							Inner join termhasbaseform b ON b.FKBaseValueID = a.BaseFormID
@@ -295,10 +316,13 @@
 			$this->db->join('baseform', 'baseform.BaseFormID = termhasbaseform.FKBaseValueID','left');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
-			$this->db->where('term.Deleted','False');
+			$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
+			$this->db->where('term.Deleted',0);
+			$this->db->where('translation.Deleted',0);
+			$this->db->where('translation.FKLanguageID',$languageID);
 			$this->db->like('term.TermName',$searched_item);
-			$this->db->or_like('essay.DocumentReference',$searched_item);
-			$this->db->or_like('baseform.BaseName',$searched_item);
+			//$this->db->or_like('essay.DocumentReference',$searched_item);
+			//$this->db->or_like('baseform.BaseName',$searched_item);
 			$this->db->order_by('TermName', 'ASC');
 			$query = $this->db->get();
 			if($query->num_rows() > 0)

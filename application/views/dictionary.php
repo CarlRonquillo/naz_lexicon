@@ -1,5 +1,9 @@
 <?php include('header.php'); ?>
 
+	<?php 
+        (null !== ($this->session->userdata('language_set')) ? $DefaultLanguage = $this->session->userdata('language_set') : $DefaultLanguage = 1);
+    ?>
+
 	<div class="container">
 		<div style ="width:90%;margin:auto;">
 			<?php
@@ -24,7 +28,7 @@
 				<br>
 			</div>
 			<div class="row">
-				<div class="autocomplete_container col-md-8">
+				<div class="autocomplete_container col-md-7">
 					<?php echo form_open("home/search",['class' => 'form','method' => 'get','id' => 'frm_dictionary']); ?>
 					<div class="input-group">
 						<?php echo form_input(['type' => 'text','name' => 'search','id' => 'search', 'class' => 'form-control','autocomplete' => 'off', 'placeholder' => 'Lookup','value' => $searchValue,'autofocus' => true]); ?>
@@ -33,27 +37,18 @@
 						</span>
 					</div>
 				</div>
-			    <div class="form-group col-md-4">
+			    <div class="form-group col-md-5">
 			    	<div class="form-group">
-				      <label for="Language" class="col-md-3 control-label">Target Language:</label>
-				     	<div class="col-md-9">
+				      <label for="Language" class="col-md-4 control-label">Set target language:</label>
+				     	<div class="col-md-8">
 				    		<?php
-					    		if(isset($_GET['Language']))
-					    		{
-								    $LanguageID=htmlentities($_GET['Language']);
-								}
-								else
-								{
-				    				$LanguageID = 1;
-								}
-
 								$lists = array();
 								foreach($languages as $record)
 								{
 									$lists[$record->LanguageID]=$record->Language;
 								}
 							echo form_dropdown(['name' => 'Language','id' => 'Language', 'class' => 'form-control',
-								'autocomplete' => 'on', 'onchange' => "getval(this);"],$lists,$LanguageID); ?>
+								'autocomplete' => 'on', 'onchange' => "getval(this);"],$lists,$DefaultLanguage); ?>
 				    	</div>
 			    	</div>
 			    </div>
@@ -93,12 +88,12 @@
 			 	<div class="panel">
 				    <div class="panel-heading">
 				      	<h4 class="panel-title">
-				        	<a class="accordion-toggle collapsed" data-toggle="collapse" href="#<?php echo $record->TermID; ?>">
+				        	<a class="accordion-toggle collapsed" data-toggle="collapse" href="#<?php echo $record->TranslationID; ?>">
 				          		<?php echo $record->TermName; ?> - <i><b><?php echo $record->Translation; ?></b></i>
 				        	</a>
 				     	</h4>
 				    </div>
-			    <div id="<?php echo $record->TermID; ?>" class="panel-collapse collapse">
+			    <div id="<?php echo $record->TranslationID; ?>" class="panel-collapse collapse">
 			      <div class="panel-body">
 			      	<?php if(!empty($record->GlossaryEntry)) { ?>
 				        <p><?php echo $record->GlossaryEntry; ?></p>
@@ -136,12 +131,12 @@
 							 	<div class="panel">
 								    <div class="panel-heading">
 								      	<h4 class="panel-title">
-								        	<a class="accordion-toggle collapsed" data-toggle="collapse" href="#<?php echo $record->TermID; ?>">
+								        	<a class="accordion-toggle collapsed" data-toggle="collapse" href="#<?php echo $record->TranslationID; ?>">
 								          		<?php echo $record->TermName; ?> - <i><b><?php echo $record->Translation; ?></b></i>
 								        	</a>
 								     	</h4>
 								    </div>
-							    <div id="<?php echo $record->TermID; ?>" class="panel-collapse collapse">
+							    <div id="<?php echo $record->TranslationID; ?>" class="panel-collapse collapse">
 							      <div class="panel-body">
 							      	<?php if(!empty($record->GlossaryEntry)) { ?>
 								        <p><?php echo $record->GlossaryEntry; ?></p>

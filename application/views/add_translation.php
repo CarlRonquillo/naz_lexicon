@@ -14,7 +14,7 @@
                 $Translation = "";
                 $FauxAmis = "";
                 $Comment = "";
-                $TranslationID = 0;
+                $TranslationID = $this->session->userdata('language_set');
             }
 
             if($_GET['translation'] == 0)
@@ -138,17 +138,23 @@
 		<?php echo form_close(); ?>
 	</div>
 	<div class="col-md-7">
-            <table class="table table-striped table-hover ">
-                <thead>
-                	<tr>
-	                    <th>#</th>
-	                    <th>Translation</th>
-	                    <th>Language</th>
-	                    <th>Faux Amis</th>
-	                    <th>Comment</th>
-                        <th></th>
-                    </tr>
-                </thead>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-6">
+                <?php echo anchor("home/Term?baseForm={$_GET['baseForm']}&term=0","Term",["class"=>"col-md-5 btn btn-default","title" => "Add Translation"]); ?>
+                <?php echo anchor("home/Terms?Language={$this->session->userdata('language_set')}","View List",["class"=>"col-md-6 col-md-offset-1 btn btn-primary","title" => "View Terms"]); ?>
+            </div>
+        </div>
+        <table class="table table-striped table-hover ">
+            <thead>
+                <tr>
+	                <th>#</th>
+                    <th>Translation</th>
+                    <th>Language</th>
+                    <th>Faux Amis</th>
+                    <th>Comment</th>
+                    <th></th>
+                </tr>
+            </thead>
                 <tbody>
                     <?php $count = 1;
                     if(count($Translations)): ?>
@@ -167,12 +173,6 @@
                 </tbody>
             </table>
    		</div>
-    <div class="row">
-        <div class="col-md-3 col-md-offset-9">
-            <?php echo anchor("home/Term?baseForm={$_GET['baseForm']}&term=0","Term",["class"=>"col-md-5 btn btn-default","title" => "Add Translation"]); ?>
-            <?php echo anchor("home/Terms","View List",["class"=>"col-md-6 col-md-offset-1 btn btn-primary","title" => "View Terms"]); ?>
-        </div>
-    </div><br>
 </div>
 
 	<script type="text/javascript"> 

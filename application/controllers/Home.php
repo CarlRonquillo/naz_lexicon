@@ -118,16 +118,29 @@ class Home extends CI_Controller {
 	{
 		$this->load->model('DictionaryModel');
 		$searched_item = $this->input->get('search');
+		$language_id = $this->input->get('Language');
+
 		if(isset($searched_item))
 		{
-			$data['terms'] = $this->DictionaryModel->search_terms($searched_item);
+			$data['terms'] = $this->DictionaryModel->search_terms($searched_item,$language_id);
+			$laguage_set['language_set'] = $language_id;
+			$this->session->set_userdata($laguage_set);
+
+			$TermExists = $this->DictionaryModel->termExists($searched_item,$language_id);
+			if(!empty($TermExists))
+			{
+				$data['prompt'] = anchor("home/Translation?baseForm={$TermExists['BaseFormID']}&term={$TermExists['TermID']}&translation=0","<i>Add translation here</i>");
+			}
 		}
 		else
 		{
-			$data['terms'] = $this->DictionaryModel->get_terms();
+			$data['terms'] = $this->DictionaryModel->get_terms($language_id);
 		}
+		
+		$data['languages'] = $this->DictionaryModel->get_languages();
 		$data['termNames'] = $this->DictionaryModel->get_TermNames();
 		$data['searched'] = $searched_item;
+
 		$this->load->view('view_terms',$data);
 	}
 
@@ -404,6 +417,9 @@ class Home extends CI_Controller {
 			$data['prompt'] = "<h3>Sorry, this term has no baseform!</h3><p><i><a id='adminOnly' href='{$url}'>add baseform here.</a></i></p>";
 		}
 
+		$laguage_set['language_set'] = $language_id;
+		$this->session->set_userdata($laguage_set);
+
 		$this->load->view('dictionary',$data);
 	}
 
@@ -463,7 +479,7 @@ class Home extends CI_Controller {
 		{
 			$this->session->set_flashdata('response','Record Not Deleted!');
 		}
-		return redirect("home/Translation?baseForm=1&term=1");
+		return redirect("home/Translation?baseForm=1&term=1&translation=0");
 	}
 
 	public function delete_baseform($record_id,$tableName,$fieldName)
