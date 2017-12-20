@@ -35,7 +35,7 @@
 			    </div>
 			</div>
 			<div class="col-md-1">
-				<?php echo anchor("home/Terms","<i class='glyphicon glyphicon-refresh'></i>",["class"=>"btn btn-success round",'title' => 'Clear Search']); ?>
+				<?php echo anchor("home/Terms?Language={$this->session->userdata('language_set')}","<i class='glyphicon glyphicon-refresh'></i>",["class"=>"btn btn-success round",'title' => 'Clear Search']); ?>
 			</div>			
 			<div class="col-md-2"></div>
 			<?php echo form_close(); ?>
@@ -63,7 +63,6 @@
 				      <th>Base Forms</th>
 				      <th>Glossary Entry</th>
 				      <th>Reference</th>
-				      <th></th>
 				    </tr>
 			 	</thead>
 			 	<tbody>
@@ -73,11 +72,19 @@
 			    			<tr>
 			    				<td><?php echo $count++; ?></td>
 			    				<td><?php echo anchor("home/Translation?baseForm={$term->BaseFormID}&term={$term->TermID}&translation={$term->TranslationID}",$term->TermName);?></td>
-			    				<td><?php echo $term->Translation; ?></td>
+			    				<td>
+			    					<?php if(!empty($term->Translation))
+			    					{
+			    						echo $term->Translation;
+			    					}
+			    					else
+			    					{
+			    						echo anchor("home/Translation?baseForm={$term->BaseFormID}&term={$term->TermID}&translation=0","<i>add translation here</i>");
+			    					} ?>
+			    				</td>
 			    				<td><?php echo $term->Basenames; ?></td>
 			    				<td><?php echo $term->GlossaryEntry; ?></td>
 			    				<td><?php echo $term->DocumentReference; ?></td>
-			    				<td><?php echo anchor("home/delete_term/{$term->TermID}/term/TermID/1","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>
 			    			</tr>
 						<?php } else: ?>
 							<tr>No Record/s Found! <?php echo (isset($prompt) ? $prompt : ''); ?></tr>

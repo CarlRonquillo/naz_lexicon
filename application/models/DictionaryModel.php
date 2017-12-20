@@ -293,10 +293,11 @@
 			$this->db->join('baseform', 'baseform.BaseFormID = termhasbaseform.FKBaseValueID','left');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
-			$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
-			$this->db->where('translation.FKLanguageID',$languageID);
+			$this->db->join('translation', 'translation.FKTermID = term.TermID AND translation.Deleted = 0 AND translation.FKLanguageID = '.$languageID,'left');
+			//$this->db->where('(translation.FKLanguageID = '.$languageID.' OR translation.TranslationID IS NULL)');
+			//$this->db->or_where('translation.TranslationID IS NULL', null);
+			//$this->db->where('(translation.Deleted = 0 OR translation.Deleted IS NULL)');
 			$this->db->where('term.Deleted',0);
-			$this->db->where('translation.Deleted',0);
 			$this->db->order_by('TermName', 'ASC');
 			$query = $this->db->get();
 			if($query->num_rows() > 0)

@@ -20,10 +20,12 @@
             if($_GET['translation'] == 0)
             {
                 $header = "Add Translation";
+                $display ="inline";
             }
             else
             {
-                $header = "Update <b>".$Translation."</b>";
+                $header = "Update <b>".$Translation."</b> (".$record->Language.")";
+                $display ="none";
             }
         ?>
 	<h2><?php echo $header; ?></h2><hr>
@@ -80,7 +82,7 @@
                     <span><?php echo form_error('FKTermID') ?></span>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="display:<?php echo $display; ?>">
             	<div class="form-group">
                     <label for="FKLanguageID" class="col-lg-3 control-label">Language</label>
                     <div class="col-lg-5">

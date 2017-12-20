@@ -51,6 +51,10 @@ class Home extends CI_Controller {
         	{
         		$session_data = $this->DictionaryModel->user_details($username,$password);
         		$this->session->set_userdata($session_data);
+
+        		$laguage_set['language_set'] = 1;
+				$this->session->set_userdata($laguage_set);
+
         		redirect('home/index');
         	}
         	else
@@ -120,7 +124,7 @@ class Home extends CI_Controller {
 		$searched_item = $this->input->get('search');
 		$language_id = $this->input->get('Language');
 
-		if(isset($searched_item))
+		if(!empty($searched_item))
 		{
 			$data['terms'] = $this->DictionaryModel->search_terms($searched_item,$language_id);
 			$laguage_set['language_set'] = $language_id;
