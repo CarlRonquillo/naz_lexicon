@@ -139,6 +139,8 @@ class Home extends CI_Controller {
 		else
 		{
 			$data['terms'] = $this->DictionaryModel->get_terms($language_id);
+			$laguage_set['language_set'] = $language_id;
+			$this->session->set_userdata($laguage_set);
 		}
 		
 		$data['languages'] = $this->DictionaryModel->get_languages();
