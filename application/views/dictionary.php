@@ -48,7 +48,7 @@
 									$lists[$record->LanguageID]=$record->Language;
 								}
 							echo form_dropdown(['name' => 'Language','id' => 'Language', 'class' => 'form-control',
-								'autocomplete' => 'on', 'onchange' => "getval(this);"],$lists,$DefaultLanguage); ?>
+								'autocomplete' => 'on', 'onchange' => "insertParam(this,'Language');"],$lists,$DefaultLanguage); ?>
 				    	</div>
 			    	</div>
 			    </div>
@@ -70,8 +70,51 @@
 			    </div>
 		    </div>-->
 		    <div style="display:<?php echo $display;?>">
-			<div class="col-md-8">
-				<div class="row">
+				<div class="col-md-7">
+					<?php if(count($_record)): ?>
+						<?php foreach($_record as $record) { ?>
+				 	<div class="panel">
+					    <div class="panel-heading">
+					      	<h3>
+					          	<?php echo $record->TermName; ?> - <i><b><?php echo $record->Translation; ?></b></i>
+					     	</h3>
+					    </div>
+				    <div id="<?php echo $record->TranslationID; ?>">
+				      <div class="panel-body">
+				      	<?php if(!empty($record->GlossaryEntry)) { ?>
+					        <p><?php echo $record->GlossaryEntry; ?></p>
+				        <?php } ?>
+
+				        <?php if(!empty($record->Title)) { ?>
+					        <p><?php echo $record->Title; ?></p>
+				        <?php } ?>
+
+				        <?php if(!empty($record->DocumentReference)) { ?>
+					        <p><i>Ref: </i><?php echo $record->DocumentReference; ?></p>
+				        <?php } ?>
+
+				        <?php if(!empty($record->ContextValue)) { ?>
+					        <p><i>Context: </i><?php echo $record->ContextValue; ?></p>
+				        <?php } ?>
+
+				        <?php if(!empty($record->FauxAmis)) { ?>
+					        <p><i>Faux Amis: </i><?php echo $record->FauxAmis; ?></p>
+				        <?php } ?>
+
+				        <?php if(!empty($record->Note)) { ?>
+					        <p><i>Note: </i><?php echo $record->Note; ?> <br></p>
+				        <?php } ?>
+					        <?php echo anchor("home/Suggest/{$record->TermID}",'edit',['id' => 'adminOnly']); ?>
+				      </div>
+				    </div>
+				  </div>
+				  <?php } ?>
+				</div>
+
+			</div>
+			<div class="well col-md-5">
+				<div id="term-results">
+					<div class="row">
 			    	<div class="col-md-12">
 			    		<p class="term">
 				    		<?php if(isset($baseName['BaseName']))
@@ -83,7 +126,6 @@
 			    	</div>
 			    </div>
 			<div class="panel-group" id="accordion">
-				<?php if(count($records)): ?>
 					<?php foreach($records as $record) { ?>
 			 	<div class="panel">
 				    <div class="panel-heading">
@@ -173,10 +215,9 @@
 					</div>
 				</div>
 				<?php endif; ?>
+				<div>
 			</div>
-
-			</div>
-			<div class="see-also col-md-4">
+			<div class="see-also">
 			    <?php if(count($related_words_ID)): ?>
 			    	<div class="row">
 			    		<p>see also</p>
@@ -278,4 +319,53 @@
 			}
 		}
 	});
+
+	function insertParam(sel, variable)
+		{
+		    key = encodeURI(variable);
+		    value = encodeURI(sel.value);
+
+            var kvp = document.location.search.substr(1).split('&');
+
+            if(key == 'translation')
+            {
+                value = $(sel).data("value");
+            }
+
+            var i=kvp.length; var x; while(i--) 
+            {
+                x = kvp[i].split('=');
+
+                if (x[0]==key)
+                {
+                    x[1] = value;
+                    kvp[i] = x.join('=');
+                    break;
+                }
+            }
+
+            /*if(key != 'term')
+            {
+                key2 = 'term';                      
+                value2 = <?php echo $first_TermID; ?>;
+
+                //term change!!!!!!!!!!!!
+                var i=kvp.length; var x; while(i--) 
+                {
+                    x = kvp[i].split('=');
+
+                    if (x[0]==key2)
+                    {
+                        x[1] = value2;
+                        kvp[i] = x.join('=');
+                        break;
+                    }
+                }
+            }*/
+
+		    if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+
+		    //this will reload the page, it's likely better to store this until finished
+		    document.location.search = kvp.join('&');
+		}
 </script>

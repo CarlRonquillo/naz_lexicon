@@ -30,7 +30,7 @@
 								$lists[$record->LanguageID]=$record->Language;
 							}
 						echo form_dropdown(['name' => 'Language','id' => 'Language', 'class' => 'form-control',
-								'autocomplete' => 'on', 'onchange' => "getval(this);"],$lists,$_GET['Language']); ?>
+								'autocomplete' => 'on', 'onchange' => "insertParam(this,'Language');"],$lists,$_GET['Language']); ?>
 				    </div>
 			    </div>
 			</div>
@@ -114,4 +114,51 @@
 		    source: availableTags
 		});
 	} );
+
+	function insertParam(sel, variable)
+        {
+            var kvp = document.location.search.substr(1).split('&');
+            key = encodeURI(variable);
+
+            if(variable == 'term')
+            {
+                value = $(sel).data("value");
+            }
+            else
+            {
+                value = sel.value;
+
+                key2 = 'term';
+                value2 = 0;
+
+                var i=kvp.length; var x; while(i--) 
+                {
+                    x = kvp[i].split('=');
+
+                    if (x[0]==key2)
+                    {
+                        x[1] = value2;
+                        kvp[i] = x.join('=');
+                        break;
+                    }
+                }
+            }
+
+            var i=kvp.length; var x; while(i--) 
+            {
+                x = kvp[i].split('=');
+
+                if (x[0]==key)
+                {
+                    x[1] = value;
+                    kvp[i] = x.join('=');
+                    break;
+                }
+            }
+
+            if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+
+            //this will reload the page, it's likely better to store this until finished
+            document.location.search = kvp.join('&');
+        }
 </script>

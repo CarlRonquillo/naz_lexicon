@@ -107,7 +107,7 @@
 			}
 		}
 
-		public function baseform_get_term($baseFormID,$languageID)
+		public function baseform_get_term($baseFormID,$languageID,$searched_item)
 		{
 			$this->db->select('*');
 			$this->db->limit(6);
@@ -120,6 +120,29 @@
 			$this->db->join('languages', 'languages.LanguageID = translation.FKLanguageID','inner');
 			$this->db->where('baseform.BaseFormID',$baseFormID);
 			$this->db->where('languages.LanguageID', $languageID);
+			$this->db->where('term.TermName !=', $searched_item);
+			$this->db->where('baseform.Deleted', 0);
+            $this->db->where('translation.Deleted', 0);
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+			{
+				return $query->result();
+			}
+		}
+
+		public function get_term($baseFormID,$languageID,$searched_item)
+		{
+			$this->db->select('*');
+			$this->db->from('baseform');
+			$this->db->join('termhasbaseform', 'termhasbaseform.FKBaseValueID = baseform.BaseFormID');
+			$this->db->join('term', 'term.TermID = termhasbaseform.FKTermID');
+			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
+			$this->db->join('context', 'context.FKTermID = term.TermID','left');
+			$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
+			$this->db->join('languages', 'languages.LanguageID = translation.FKLanguageID','inner');
+			$this->db->where('baseform.BaseFormID',$baseFormID);
+			$this->db->where('languages.LanguageID', $languageID);
+			$this->db->where('term.TermName', $searched_item);
 			$this->db->where('baseform.Deleted', 0);
             $this->db->where('translation.Deleted', 0);
 			$query = $this->db->get();

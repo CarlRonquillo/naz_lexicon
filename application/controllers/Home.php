@@ -7,7 +7,7 @@ class Home extends CI_Controller {
 	{
 		$this->load->model('DictionaryModel');
 		$data['languages'] = $this->DictionaryModel->get_languages();
-		$data['records'] = $this->DictionaryModel->baseform_get_term(0,0);
+		$data['records'] = $this->DictionaryModel->baseform_get_term(0,0,null);
 		$data['termNames'] = $this->DictionaryModel->get_TermNames();
 		$this->load->view('dictionary',$data);
 	}
@@ -402,7 +402,8 @@ class Home extends CI_Controller {
 		$data['baseName'] = $this->DictionaryModel->search_get_baseform($searched_item,$language_id);
 		$baseForm = $data['baseName'];
 		$data['languages'] = $this->DictionaryModel->get_languages();
-		$data['records'] = $this->DictionaryModel->baseform_get_term($baseForm['BaseFormID'],$language_id);
+		$data['_record'] = $this->DictionaryModel->get_term($baseForm['BaseFormID'],$language_id,$searched_item);
+		$data['records'] = $this->DictionaryModel->baseform_get_term($baseForm['BaseFormID'],$language_id,$searched_item);
 		$data['records_more'] = $this->DictionaryModel->baseform_get_term_more($baseForm['BaseFormID'],$language_id);
 		$data['termNames'] = $this->DictionaryModel->get_TermNames();
 		$data['related_words_ID'] = $this->DictionaryModel->related_words_ID($baseForm['BaseFormID'],$language_id);
