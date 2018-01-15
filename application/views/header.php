@@ -36,7 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <ul class="dropdown-menu" role="menu">
                 <li><?php echo anchor("#","Accounts") ?></li>
                 <li><?php echo anchor("home/Terms?Language=".(null !== $this->session->userdata('language_set') ? $this->session->userdata('language_set') : 1),"Terms") ?></li>
-                <li><?php echo anchor("home/SignUp","Sign Up") ?></li>
+                <li><?php echo anchor("home/SignUp","Create Account") ?></li>
                 <li class="divider"></li>
                 <li><?php echo anchor("home/logout","Logout") ?></li>
               </ul>

@@ -109,6 +109,18 @@
 				    </div>
 				  </div>
 				  <?php } ?>
+				  	<br><br>
+					<div class="see-also">
+					    <?php if(count($related_words_ID)): ?>
+					    	<div class="row">
+					    		<p>see also</p>
+					    	</div>
+					    		<?php foreach($related_words_ID as $word) { ?>
+					    			<?php echo anchor("home/search?search={$word['TermName']}&Language={$DefaultLanguage}",$word['TermName']). ', '; ?>
+					    		<?php } ?>
+					    <?php endif; ?>
+					</div>
+
 				</div>
 
 			</div>
@@ -217,20 +229,6 @@
 				<?php endif; ?>
 				<div>
 			</div>
-			<div class="see-also">
-			    <?php if(count($related_words_ID)): ?>
-			    	<div class="row">
-			    		<p>see also</p>
-			    	</div>
-			    	<ul>
-			    		<?php foreach($related_words_ID as $word) { ?>
-			    			<li>
-			    				<?php echo anchor("home/search?search={$word['TermName']}&Language={$LanguageID}",$word['TermName']); ?>
-			    			</li>
-			    		<?php } ?>
-			    	</ul>
-			    <?php endif; ?>
-			</div>
 		    <?php else: echo $prompt; endif; ?>
 			<?php echo form_close(); ?>
 				<?php 
@@ -246,7 +244,7 @@
 			        endif;
 			    ?>
 		    	<div class= "well" id="suggestTranslation" style="display:none;">
-		    		<?php echo form_open("home/save_suggestTranslation/{$_GET['search']}/{$LanguageID}",['class' => 'form-horizontal','type' => 'POST']); ?>
+		    		<?php echo form_open("home/save_suggestTranslation/{$_GET['search']}/{$DefaultLanguage}",['class' => 'form-horizontal','type' => 'POST']); ?>
 		    		<div class="row">
                     	<div class="form-group">
                         	<label for="SuggestedBy" class="col-lg-2 control-label">Full Name</label>
