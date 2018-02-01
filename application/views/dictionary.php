@@ -48,7 +48,7 @@
 									$lists[$record->LanguageID]=$record->Language;
 								}
 							echo form_dropdown(['name' => 'Language','id' => 'Language', 'class' => 'form-control',
-								'autocomplete' => 'on', 'onchange' => "insertParam(this,'Language');"],$lists,$DefaultLanguage); ?>
+								'autocomplete' => 'on', 'onchange' => "insertParam(this,'Language');"],$lists,(isset($_GET['Language']) ? $_GET['Language'] : $DefaultLanguage)); ?>
 				    	</div>
 			    	</div>
 			    </div>

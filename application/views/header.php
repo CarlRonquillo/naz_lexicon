@@ -34,10 +34,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <span class="caret"></span>
             </a>
               <ul class="dropdown-menu" role="menu">
-                <li><?php echo anchor("#","Accounts") ?></li>
                 <li><?php echo anchor("home/Terms?Language=".(null !== $this->session->userdata('language_set') ? $this->session->userdata('language_set') : 1),"Terms") ?></li>
                 <li><?php echo anchor("home/SignUp","Create Account") ?></li>
+                <li><?php echo anchor("home/Accounts","Accounts") ?></li>
                 <li class="divider"></li>
+                <li><?php echo anchor("home/EditAccount/{$this->session->userdata('ID')}","Edit My Profile") ?></li>
                 <li><?php echo anchor("home/logout","Logout") ?></li>
               </ul>
           </li>

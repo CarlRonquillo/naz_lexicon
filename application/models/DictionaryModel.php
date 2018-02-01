@@ -46,6 +46,19 @@
 			return $query->result();
 		}
 
+		public function get_specific_account($user_id)
+		{
+			$this->db->select('ID,FirstName,LastName,Username,Password');
+			$this->db->from('accounts');
+			$this->db->where('ID',$user_id);
+			$this->db->where('Deleted',0);
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+			{
+				return $query->row_array();
+			}
+		}
+
 		public function get_languages()
 		{
 			$this->db->distinct();
@@ -375,6 +388,12 @@
 			return $this->db->insert($tableName,$data);
 		}
 
+		public function updateAccount($data,$user_id)
+		{
+			$this->db->where('ID', $user_id);
+			return $this->db->update('accounts', $data);
+		}
+
 		public function isTermhasBaseExist($baseID,$termID)
 		{
 			$this->db->where('termhasbaseform.FKBaseValueID',$baseID);
@@ -524,6 +543,18 @@
 		{
 			$this->db->select('*');
 			$this->db->from('partofspeech');
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+			{
+				return $query->result();
+			}
+		}
+
+		public function get_accounts()
+		{
+			$this->db->select('*');
+			$this->db->from('accounts');
+			$this->db->where('Deleted',0);
 			$query = $this->db->get();
 			if($query->num_rows() > 0)
 			{

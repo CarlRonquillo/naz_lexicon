@@ -2,7 +2,7 @@
 
 <div class="container">
     <div style ="width:40%;margin:auto;">
-        <h2 class="text-center">Sign Up</h2><hr>
+        <h2 class="text-center">Edit Account</h2><hr>
         <?php 
             if($error = $this->session->flashdata('response')):
             {                       
@@ -16,13 +16,13 @@
             endif
         ?>
         <div class="well">
-            <?php echo form_open("home/save_Account",['class' => 'form-horizontal']); ?>
+            <?php echo form_open("home/update_Account/{$record['ID']}",['class' => 'form-horizontal']); ?>
             <div class="row">
                 <div class="form-group">
                     <label for="FirstName" class="col-lg-3 control-label">First name</label>
                     <div class="col-lg-8">
                         <?php echo form_input(['type' => 'text','name' => 'FirstName', 'class' => 'form-control',
-                                                    'autocomplete' => 'off']); ?>
+                                                    'autocomplete' => 'off'],$record['FirstName']); ?>
                     <span><?php echo form_error('FirstName') ?></span>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                     <label for="LastName" class="col-lg-3 control-label">Last name</label>
                     <div class="col-lg-8">
                         <?php echo form_input(['type' => 'text','name' => 'LastName', 'class' => 'form-control',
-                                                    'autocomplete' => 'off']); ?>
+                                                    'autocomplete' => 'off'],$record['LastName']); ?>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                     <label for="Username" class="col-lg-3 control-label">User name</label>
                     <div class="col-lg-8">
                         <?php echo form_input(['type' => 'text','name' => 'Username', 'class' => 'form-control',
-                                                    'autocomplete' => 'off']); ?>
+                                                    'autocomplete' => 'off'],$record['Username']); ?>
                     <span><?php echo form_error('Username') ?></span>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                     <label for="Password" class="col-lg-3 control-label">Password</label>
                     <div class="col-lg-8">
                         <?php echo form_input(['type' => 'password','name' => 'Password', 'class' => 'form-control',
-                                                    'autocomplete' => 'off']); ?>
+                                                    'autocomplete' => 'off'],$record['Password']); ?>
                     <span><?php echo form_error('Password') ?></span>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                     <label for="PassConf" class="col-lg-3 control-label">Confirm Password</label>
                     <div class="col-lg-8">
                         <?php echo form_input(['type' => 'password','name' => 'PassConf', 'class' => 'form-control',
-                                                    'autocomplete' => 'off']); ?>
+                                                    'autocomplete' => 'off'],$record['Password']); ?>
                     <span><?php echo form_error('PassConf') ?></span>
                     </div>
                 </div>

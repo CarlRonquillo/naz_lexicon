@@ -35,6 +35,13 @@ class Home extends CI_Controller {
 		$this->load->view('sign_up');
 	}
 
+	public function EditAccount($user_id)
+	{
+		$this->load->model('DictionaryModel');
+		$data['record'] = $this->DictionaryModel->get_specific_account($user_id);
+		$this->load->view('edit_account',$data);
+	}
+
 	public function login_validation()
 	{
 		$this->form_validation->set_rules('Username','Username','required');
@@ -71,7 +78,7 @@ class Home extends CI_Controller {
 
 	public function save_Account()
 	{
-		$this->form_validation->set_rules('SuggestedBy', 'First name', 'required');
+		$this->form_validation->set_rules('FirstName', 'First name', 'required');
 		$this->form_validation->set_rules('Username', 'User name', 'required');
 		$this->form_validation->set_rules('Password', 'Password', 'required');
 		$this->form_validation->set_rules('PassConf', 'Password Confirmation', 'required|matches[Password]');
@@ -93,6 +100,49 @@ class Home extends CI_Controller {
         }
 
         $this->SignUp();
+	}
+
+	public function Accounts()
+	{
+		if(!empty($this->session->userdata('Username')))
+		{
+			$this->load->model('DictionaryModel');
+	        $data['accounts'] = $this->DictionaryModel->get_accounts();
+	        $this->load->view('view_accounts',$data);
+		}
+		else
+		{
+			$this->Logout();
+		}
+	}
+
+	public function update_Account($user_id)
+	{
+		$this->form_validation->set_rules('FirstName', 'First name', 'required');
+		$this->form_validation->set_rules('Username', 'Username', 'required');
+		$this->form_validation->set_rules('Password', 'Password', 'required');
+		$this->form_validation->set_rules('PassConf', 'Password Confirmation', 'required|matches[Password]');
+		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
+		$this->load->model('DictionaryModel');
+		$data = $this->input->post();
+
+		if ($this->form_validation->run())
+        {
+        	unset($data['PassConf']);
+        	if($this->DictionaryModel->updateAccount($data,$user_id))
+	        {
+	           	$this->session->set_flashdata('response','Record successfully updated.');
+
+	           	$session_data = $this->DictionaryModel->user_details($data['Username'],$data['Password']);
+        		$this->session->set_userdata($session_data);
+	        }
+	        else
+	        {
+				$this->session->set_flashdata('response','Record was not updated.');
+	        }
+        }
+
+        $this->EditAccount($user_id);
 	}
 
 	public function save_suggestedTerm($TermID)
@@ -576,6 +626,28 @@ class Home extends CI_Controller {
 		}
 
 		return redirect("home/existing_term_search?search={$searchTerm}&baseForm={$baseID}");
+	}
+
+	public function delete_account($record_id)
+	{
+		$data = array('Deleted' => 1, 'DateDeleted' => date("Y-m-d H:i:s"));
+		$this->load->model('DictionaryModel');
+		$current_id = $this->session->userdata('ID');
+
+		if($this->DictionaryModel->deleteRecord($record_id,$data,'accounts','ID'))
+		{
+			if($record_id = $current_id)
+			{
+				$this->Logout();
+			}
+			$this->session->set_flashdata('response','Record Successfully Deleted.');
+		}
+		else
+		{
+			$this->session->set_flashdata('response','Record Not Deleted!');
+		}
+
+		return redirect("home/Accounts");
 	}
 
 }

@@ -58,7 +58,7 @@
                             $baseForms = array('');
                             foreach($Base_Names as $Base_Name)
                             {
-                            $baseForms[$Base_Name->BaseFormID]=$Base_Name->BaseName;
+                                $baseForms[$Base_Name->BaseFormID]=$Base_Name->BaseName;
                             }
                             echo form_dropdown(['id' => 'BaseForm','name' => 'BaseForm', 'class' => 'form-control','autocomplete' => 'off','onchange' => "insertParam(this,'baseForm')"],$baseForms,$_GET['baseForm']);
                         ?>
