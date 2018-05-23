@@ -124,6 +124,7 @@
 				</div>
 
 			</div>
+			<?php if(count($records)): ?>
 			<div class="well col-md-5">
 				<div id="term-results">
 					<div class="row">
@@ -177,6 +178,7 @@
 			    </div>
 			  </div>
 			  <?php } ?>
+			  <?php endif; ?>
 			  	<?php if(count($records_more)): ?>
 			  	<div class="text-container">
 		    		<div class="text-content short-text">
