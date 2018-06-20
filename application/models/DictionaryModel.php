@@ -94,7 +94,6 @@
 		{
 			$this->db->select('term.TermID,term.TermName,term.GlossaryEntry');
 			$this->db->from('term');
-			$this->db->join('termrelatestoterm', 'termrelatestoterm.FKTermID = term.TermID');
 			$this->db->like('term.TermName',$Searched_term);
 			$this->db->where('term.Deleted', 0);
 			$query = $this->db->get();
@@ -331,10 +330,11 @@
 			$this->db->from('term');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
-			$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
+			$this->db->join('translation', 'translation.FKTermID = term.TermID AND translation.Deleted = 0 AND translation.FKLanguageID = '.$languageID,'left');
+			//$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
 			$this->db->where('term.Deleted',0);
-			$this->db->where('translation.Deleted',0);
-			$this->db->where('translation.FKLanguageID',$languageID);
+			//$this->db->where('translation.Deleted',0);
+			//$this->db->where('translation.FKLanguageID',$languageID);
 			$this->db->like('term.TermName',$searched_item);
 			//$this->db->or_like('essay.DocumentReference',$searched_item);
 			//$this->db->or_like('baseform.BaseName',$searched_item);
@@ -428,7 +428,7 @@
 
 		public function save_term($data)
 		{
-			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry']);
+			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry'],'AddedBy' => $this->session->userdata('ID'));
 			$this->db->insert('term',$term);
 
 			$TermID = $this->db->insert_id();

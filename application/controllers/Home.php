@@ -189,11 +189,11 @@ class Home extends CI_Controller {
 				$laguage_set['language_set'] = $language_id;
 				$this->session->set_userdata($laguage_set);
 
-				$TermExists = $this->DictionaryModel->termExists($searched_item,$language_id);
+				/*$TermExists = $this->DictionaryModel->termExists($searched_item,$language_id);
 				if(!empty($TermExists))
 				{
 					$data['prompt'] = anchor("home/Translation?term={$TermExists['TermID']}&translation=0","<i>Add translation here</i>");
-				}
+				}*/
 			}
 			else
 			{
@@ -433,6 +433,7 @@ class Home extends CI_Controller {
 		//$baseForm = $data['baseName'];
 		$data['languages'] = $this->DictionaryModel->get_languages();
 		$data['_record'] = $this->DictionaryModel->get_term($language_id,$searched_item);
+		$termID = $this->DictionaryModel->get_TermID($searched_item);
 		$data['termNames'] = $this->DictionaryModel->get_TermNames();
 		$data['related_words_ID'] = $this->DictionaryModel->related_words_ID((isset($data['_record']) ? $data['_record']->TermID : 0),$language_id);
 
@@ -444,7 +445,18 @@ class Home extends CI_Controller {
 		}
 		else if($promptResult == '2')
 		{
-			$data['prompt'] = "<h3>No translation found!</h3><p><i>Translation for the term you've searched may not be available.<br><a onclick='showHide()' style='cursor:pointer'>suggest translation.</a></i></p>";
+			$data['prompt'] = "<h3>No translation found!</h3><p><i>Translation for the term you've searched may not be available.<br>";
+
+			if(empty($this->session->userdata('Username')))
+			{
+				$data['prompt'] .= "<a onclick='showHide()' style='cursor:pointer'>suggest translation.</a>";
+			}
+			else
+			{
+				$data['prompt'] .= anchor("home/Translation?term={$termID}&translation=0","add translation here");
+			}
+			
+			$data['prompt'] .= "</i></p>";
 		}
 		else if($promptResult == '3')
 		{
@@ -478,7 +490,7 @@ class Home extends CI_Controller {
 
 	public function delete_term($record_id,$tableName,$fieldName)
 	{
-		$data = array('Deleted' => 1, 'DateDeleted' => date("Y-m-d H:i:s"));
+		$data = array('DeletedBy' => $this->session->userdata('ID'),'Deleted' => 1, 'DateDeleted' => date("Y-m-d H:i:s"));
 		$this->load->model('DictionaryModel');
 
 		if($this->DictionaryModel->deleteRecord($record_id,$data,$tableName,$fieldName))
@@ -489,7 +501,7 @@ class Home extends CI_Controller {
 		{
 			$this->session->set_flashdata('response','Term Not Deleted!');
 		}
-		return redirect("home/Terms");
+		return redirect("home/Terms?Language={$this->session->userdata('language_set')}");
 	}
 
 	public function delete_translation($record_id,$termID)

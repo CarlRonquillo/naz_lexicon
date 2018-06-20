@@ -84,7 +84,7 @@
 			    				</td>
 			    			</tr>
 						<?php } else: ?>
-							<tr>No Record/s Found! <?php echo (isset($prompt) ? $prompt : ''); ?></tr>
+							<tr>No Record/s Found!</tr>
 					<?php endif; ?>
 				</tbody>
 			</table>
