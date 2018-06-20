@@ -7,7 +7,7 @@ class Home extends CI_Controller {
 	{
 		$this->load->model('DictionaryModel');
 		$data['languages'] = $this->DictionaryModel->get_languages();
-		$data['records'] = $this->DictionaryModel->baseform_get_term(0,0,null);
+		//$data['records'] = $this->DictionaryModel->baseform_get_term(0,0,null);
 		$data['termNames'] = $this->DictionaryModel->get_TermNames();
 		$this->load->view('dictionary',$data);
 	}
@@ -183,7 +183,7 @@ class Home extends CI_Controller {
 			$TermExists = $this->DictionaryModel->termExists($searched_item,$language_id);
 			if(!empty($TermExists))
 			{
-				$data['prompt'] = anchor("home/Translation?baseForm={$TermExists['BaseFormID']}&term={$TermExists['TermID']}&translation=0","<i>Add translation here</i>");
+				$data['prompt'] = anchor("home/Translation?term={$TermExists['TermID']}&translation=0","<i>Add translation here</i>");
 			}
 		}
 		else
@@ -217,16 +217,17 @@ class Home extends CI_Controller {
 	public function Term()
 	{
 		$this->load->model('DictionaryModel');
-		$baseID = $this->input->get('baseForm');
+		//$baseID = $this->input->get('baseForm');
 		$termID = $this->input->get('term');
 		
-		$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
-		$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
-		$data['baseID'] = $baseID;
-		$data['first_TermID'] =  $this->DictionaryModel->get_first_termID($baseID);
+		//$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd();
+		//$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
+		//$data['baseID'] = $baseID;
+		//$data['first_TermID'] =  $this->DictionaryModel->get_first_termID($baseID);
 		$data['record'] =  $this->DictionaryModel->get_SingleTerm($termID);
 		$data['termNames'] = $this->DictionaryModel->get_TermNames();
 		$related_terms = $this->DictionaryModel->get_relatedTerms($termID);
+		$data['Translations'] = $this->DictionaryModel->get_translations($termID);
 		$data['relatedTerms'] = "";
 		if(count($related_terms))
 		{
@@ -242,15 +243,18 @@ class Home extends CI_Controller {
 	public function Translation()
 	{
 		$this->load->model('DictionaryModel');
-		$baseID = $this->input->get('baseForm');
+		//$baseID = $this->input->get('baseForm');
 		$translationID = $this->input->get('translation');
+		$termID = $this->input->get('term');
 
-		$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
+		$data['term'] = $this->DictionaryModel->get_SingleTerm($termID);
+
+		//$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
 		$data['languages'] = $this->DictionaryModel->get_languages();
-		$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
-		$data['Translations'] = $this->DictionaryModel->get_translations($this->input->get('term'));
-		$data['first_TermID'] =  $this->DictionaryModel->get_first_termID($baseID);
-		$data['record'] =  $this->DictionaryModel->get_Singletranslations($translationID);
+		//$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
+		//$data['Translations'] = $this->DictionaryModel->get_translations($this->input->get('term'));
+		//$data['first_TermID'] =  $this->DictionaryModel->get_first_termID($baseID);
+		$data['record'] =  $this->DictionaryModel->get_Singletranslation($translationID);
 		//$data['baseID'] = $baseID;
 		$this->load->view('add_translation',$data);
 	}
@@ -356,7 +360,7 @@ class Home extends CI_Controller {
         return redirect("home/BaseForm?baseForm={$baseID}&inflection={$inflectionID}");
 	}
 
-	public function save_Term($baseID,$termID)
+	public function save_Term($termID)
 	{
 		$this->form_validation->set_rules('TermName','Term Name','required');
 		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
@@ -370,7 +374,7 @@ class Home extends CI_Controller {
 	        {
 	        	if(isset($termID) && $termID == 0)
 				{
-					if($this->DictionaryModel->save_term($data,$baseID))
+					if($this->DictionaryModel->save_term($data))
 		            {
 		            	$this->session->set_flashdata('response','Term successfully saved.');
 		            }
@@ -403,16 +407,17 @@ class Home extends CI_Controller {
 	        }
         
         //$baseForm = $this->DictionaryModel->get_latestID('baseform','BaseFormID');
-        return redirect("home/Term?baseForm={$baseID}&term={$termID}");
+        return redirect("home/Term?term={$termID}");
 	}
 
-	public function save_Translation($baseID,$termID,$translationID)
+	public function save_Translation($translationID,$termID)
 	{
 		$this->form_validation->set_rules('Translation','Translation','required');
 		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
 		$this->load->model('DictionaryModel');
 
 		$data = $this->input->post();
+		$data['FKTermID'] = $termID;
 		if ($this->form_validation->run())
         {
         	if(isset($translationID) && $translationID == 0)
@@ -440,7 +445,7 @@ class Home extends CI_Controller {
         }
         
         //$baseForm = $this->DictionaryModel->get_latestID('baseform','BaseFormID');
-        return redirect("home/Translation?baseForm={$baseID}&term={$termID}&translation={$translationID}");
+        return redirect("home/Term?term={$termID}");
 	}
 
 	public function search()
@@ -449,14 +454,12 @@ class Home extends CI_Controller {
 		$searched_item = $this->input->get('search');
 		$language_id = $this->input->get('Language');
 
-		$data['baseName'] = $this->DictionaryModel->search_get_baseform($searched_item,$language_id);
-		$baseForm = $data['baseName'];
+		//$data['baseName'] = $this->DictionaryModel->search_get_baseform($searched_item,$language_id);
+		//$baseForm = $data['baseName'];
 		$data['languages'] = $this->DictionaryModel->get_languages();
-		$data['_record'] = $this->DictionaryModel->get_term($baseForm['BaseFormID'],$language_id,$searched_item);
-		$data['records'] = $this->DictionaryModel->baseform_get_term($baseForm['BaseFormID'],$language_id,$searched_item);
-		$data['records_more'] = $this->DictionaryModel->baseform_get_term_more($baseForm['BaseFormID'],$language_id);
+		$data['_record'] = $this->DictionaryModel->get_term($language_id,$searched_item);
 		$data['termNames'] = $this->DictionaryModel->get_TermNames();
-		$data['related_words_ID'] = $this->DictionaryModel->related_words_ID($baseForm['BaseFormID'],$language_id);
+		$data['related_words_ID'] = $this->DictionaryModel->related_words_ID((isset($data['_record']) ? $data['_record']->TermID : 0),$language_id);
 
 		$promptResult = $this->DictionaryModel->prompt($searched_item,$language_id);
 
@@ -498,45 +501,36 @@ class Home extends CI_Controller {
 		return redirect("home/BaseForm?baseForm={$baseID}&inflection=0&baseName={$BaseName}");
 	}
 
-	public function delete_term($record_id,$tableName,$fieldName,$isViewTerm,$baseID)
+	public function delete_term($record_id,$tableName,$fieldName)
 	{
 		$data = array('Deleted' => 1, 'DateDeleted' => date("Y-m-d H:i:s"));
 		$this->load->model('DictionaryModel');
 
 		if($this->DictionaryModel->deleteRecord($record_id,$data,$tableName,$fieldName))
 		{
-			$this->session->set_flashdata('response','Record Successfully Deleted.');
+			$this->session->set_flashdata('response','Term Successfully Deleted.');
 		}
 		else
 		{
-			$this->session->set_flashdata('response','Record Not Deleted!');
+			$this->session->set_flashdata('response','Term Not Deleted!');
 		}
-
-		if($isViewTerm)
-		{
-			$redirect = "home/Terms";
-		}
-		else
-		{
-			$redirect = "home/Term?baseForm={$baseID}&term=0";
-		}
-		return redirect($redirect);
+		return redirect("home/Terms");
 	}
 
-	public function delete_translation($record_id)
+	public function delete_translation($record_id,$termID)
 	{
 		$data = array('Deleted' => 1, 'DateDeleted' => date("Y-m-d H:i:s"));
 		$this->load->model('DictionaryModel');
 
 		if($this->DictionaryModel->deleteRecord($record_id,$data,'translation','TranslationID'))
 		{
-			$this->session->set_flashdata('response','Record Successfully Deleted.');
+			$this->session->set_flashdata('response','Translation Successfully Deleted.');
 		}
 		else
 		{
-			$this->session->set_flashdata('response','Record Not Deleted!');
+			$this->session->set_flashdata('response','Translation Not Deleted!');
 		}
-		return redirect("home/Translation?baseForm=1&term=1&translation=0");
+		return redirect("home/Term?term={$termID}");
 	}
 
 	public function delete_baseform($record_id,$tableName,$fieldName)
@@ -560,11 +554,11 @@ class Home extends CI_Controller {
 	public function existing_term_search()
 	{
 		$this->load->model('DictionaryModel');
-		$baseID = $this->input->get('baseForm');
+		//$baseID = $this->input->get('baseForm');
 		$searched_item = $this->input->get('search');
 		
-		$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
-		$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
+		$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd();
+		//$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
 		$data['termNames'] = $this->DictionaryModel->get_TermNames();
 		$data['Searched_Terms'] = $this->DictionaryModel->search_existing_term($searched_item);
 

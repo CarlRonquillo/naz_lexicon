@@ -15,7 +15,7 @@
         }
             endif
         ?>
-        <div class="well">
+        <div class="well"><br>
             <?php echo form_open("home/login_validation",['class' => 'form-horizontal']); ?>
             <div class="row">
                 <div class="form-group">

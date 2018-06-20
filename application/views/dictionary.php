@@ -5,7 +5,7 @@
     ?>
 
 	<div class="container">
-		<div style ="width:90%;margin:auto;">
+		<div style ="width:80%;margin:auto;">
 			<?php
 				if(isset($_GET['search']))
 				{
@@ -23,7 +23,7 @@
 			<div  id="home_header" style="display:<?php echo $display2 ?>;">
 				<center><img id="home_header" alt="Brand" style="filter:invert(90%);width: 80px;" class="img-responsive" src="<?php echo base_url("resources/images/Nazarene Logo-White.png"); ?>">
 					<h1 style="font-family:'Constantia';font-size: 60px;">NAZARENE LEXICON</h1>
-					<hr><h2>What do you want to know?</h2>
+					<hr><h3><i>Begin typing the term, then select from the list</i></h3>
 				</center>
 				<br>
 			</div>
@@ -70,45 +70,45 @@
 			    </div>
 		    </div>-->
 		    <div style="display:<?php echo $display;?>">
-				<div class="col-md-7">
+				<div class="col-md-11 col-center-block">
 					<?php if(count($_record)): ?>
-						<?php foreach($_record as $record) { ?>
+						<?php //foreach($_record as $record) { ?>
 				 	<div class="panel">
 					    <div class="panel-heading">
 					      	<h3>
-					          	<?php echo $record->TermName; ?> - <i><b><?php echo $record->Translation; ?></b></i>
+					          	<?php echo $_record->TermName; ?> - <i><b><?php echo $_record->Translation; ?></b></i>
 					     	</h3>
 					    </div>
-				    <div id="<?php echo $record->TranslationID; ?>">
+				    <div id="<?php echo $_record->TranslationID; ?>">
 				      <div class="panel-body">
-				      	<?php if(!empty($record->GlossaryEntry)) { ?>
-					        <p><?php echo $record->GlossaryEntry; ?></p>
+				      	<?php if(!empty($_record->GlossaryEntry)) { ?>
+					        <p><?php echo $_record->GlossaryEntry; ?></p>
 				        <?php } ?>
 
-				        <?php if(!empty($record->Title)) { ?>
-					        <p><?php echo $record->Title; ?></p>
+				        <?php if(!empty($_record->Title)) { ?>
+					        <p><?php echo $_record->Title; ?></p>
 				        <?php } ?>
 
-				        <?php if(!empty($record->DocumentReference)) { ?>
-					        <p><i>Ref: </i><?php echo $record->DocumentReference; ?></p>
+				        <?php if(!empty($_record->DocumentReference)) { ?>
+					        <p><i>Ref: </i><?php echo $_record->DocumentReference; ?></p>
 				        <?php } ?>
 
-				        <?php if(!empty($record->ContextValue)) { ?>
-					        <p><i>Context: </i><?php echo $record->ContextValue; ?></p>
+				        <?php if(!empty($_record->ContextValue)) { ?>
+					        <p><i>Context: </i><?php echo $_record->ContextValue; ?></p>
 				        <?php } ?>
 
-				        <?php if(!empty($record->FauxAmis)) { ?>
-					        <p><i>Faux Amis: </i><?php echo $record->FauxAmis; ?></p>
+				        <?php if(!empty($_record->FauxAmis)) { ?>
+					        <p><i>Faux Amis: </i><?php echo $_record->FauxAmis; ?></p>
 				        <?php } ?>
 
-				        <?php if(!empty($record->Note)) { ?>
-					        <p><i>Note: </i><?php echo $record->Note; ?> <br></p>
+				        <?php if(!empty($_record->Note)) { ?>
+					        <p><i>Note: </i><?php echo $_record->Note; ?> <br></p>
 				        <?php } ?>
-					        <?php echo anchor("home/Suggest/{$record->TermID}",'edit',['id' => 'adminOnly']); ?>
+					        <?php echo anchor("home/Suggest/{$_record->TermID}",'edit',['id' => 'adminOnly']); ?>
 				      </div>
 				    </div>
 				  </div>
-				  <?php } ?>
+				  <?php //} ?>
 				  	<br><br>
 					<div class="see-also">
 					    <?php if(count($related_words_ID)): ?>
@@ -124,6 +124,7 @@
 				</div>
 
 			</div>
+			 <!-- 
 			<?php if(count($records)): ?>
 			<div class="well col-md-5">
 				<div id="term-results">
@@ -230,7 +231,7 @@
 				</div>
 				<?php endif; ?>
 				<div>
-			</div>
+			</div> -->
 		    <?php else: echo $prompt; endif; ?>
 			<?php echo form_close(); ?>
 				<?php 

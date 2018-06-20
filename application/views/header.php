@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
         <li class="active"><?php echo anchor("home/index","Home"); ?></li>
-        <li><a href="#">Dictionary<span class="sr-only">(current)</span></a></li>
+        <!--<li><a href="#">Dictionary<span class="sr-only">(current)</span></a></li>-->
 
         <?php if(!empty($this->session->userdata('Username')))
           { ?>

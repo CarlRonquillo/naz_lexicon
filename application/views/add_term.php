@@ -1,6 +1,6 @@
 <?php include('header.php'); ?>
 
-    <div class="container">
+    <div class="container"  style ="width:80%;margin:auto;">
         <?php
             if(count($record)>0)
             {
@@ -28,13 +28,20 @@
             if($_GET['term'] == 0)
             {
                 $header = "Add Term";
+                $display = "none";
+                $center = "col-center-block";
+                $visibility = "hidden";
             }
             else
             {
                 $header = "Update <b>".$TermName."</b>";
+                $display = "inline";
+                $center = "";
+                $visibility = "visible";
             }
         ?>
-        <h2><?php echo $header; ?></h2><hr>
+        <center></canvas><h2><?php echo $header; ?></h2></center>
+        <hr>
         <?php 
             if($error = $this->session->flashdata('response')):
             {
@@ -47,10 +54,10 @@
         }
             endif;
         ?>
-        <div class="well col-md-5">
-            <?php echo form_open("home/save_Term/{$baseID}/{$_GET['term']}",['class' => 'form-horizontal','name' => '']); ?>
+        <div class="well col-md-5  <?php echo $center; ?>">
+            <?php echo form_open("home/save_Term/{$_GET['term']}",['class' => 'form-horizontal','name' => '']); ?>
             <fieldset>
-            <div class="row">
+            <!--<div class="row">
                 <div class="form-group">
                     <label for="BaseForm" class="col-lg-3 control-label">Base Form</label>
                     <div class="col-lg-5">
@@ -64,7 +71,7 @@
                         ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
                                     
             <div class="row">
                 <div class="form-group">
@@ -72,9 +79,6 @@
                     <div class="col-lg-8">
                         <?php echo form_input(['type' => 'text','name' => 'TermName', 'class' => 'form-control',
                                                     'autocomplete' => 'off','maxlength' => 100],$TermName); ?>
-                    </div>
-                    <div class="col-lg-1">
-                        <a id="TermName" title="Clear Update" data-value ="0" onclick="insertParam(this,'term')" class="btn btn-primary round"><span class='btn-label'><i class='glyphicon glyphicon-refresh'></i></a>
                     </div>
                     <span><?php echo form_error('TermName') ?></span>
                 </div>
@@ -155,50 +159,50 @@
                                                 <?php echo form_input(['name' => 'RelatedTerms', 'class' => 'form-control','id' => 'RelatedTerms','value' => $relatedTerms]); ?>
                                                 <?php echo form_input(['name' => 'DeletedTerms', 'class' => 'form-control','id' => 'DeletedTerms']); ?>
                                             </div>
-                                            <div class="col-lg-1">
-                                                <?php echo form_button(['type' => 'submit','content' => "<i class='glyphicon glyphicon-floppy-disk'></i>", 'class' => 'btn btn-primary round next-step', "title" => "Save Term"]); ?>
-                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <?php echo anchor("home/delete_term/{$_GET['term']}/term/TermID","delete term",["class"=>"col-md-4 btn btn-label","onclick" => "return confirm('Are you sure you want delete?')","style" => "visibility:{$visibility}"]); ?>
+                                        <!--<div class="col-md-1 col-md-offset-8">
+                                            <a id="TermName" title="Clear Update" data-value ="0" onclick="insertParam(this,'term')" class="btn btn-primary round"><span class='btn-label'><i class='glyphicon glyphicon-refresh'></i></a>
+                                        </div> -->
+                                        <?php echo anchor("home/Terms?Language={$this->session->userdata('language_set')}","Back to list",["class"=>"col-md-3 btn btn-default","title" => "View Terms"]); ?>
+                                        <?php echo form_button(['type' => 'submit','content' => "SAVE", 'class' => 'col-md-3 col-md-offset-1 btn btn-primary', "title" => "Save Term"]); ?>
                                     </div>
                                 </fieldset>
                             <?php echo form_close(); ?>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="row">
-                                <div class="col-md-10 col-md-offset-2">
-                                    <?php echo anchor("home/Existing_Term","Link Existing Term",["class"=>"col-md-4 btn","title" => "Link baseform to existing term"]); ?>
-                                    <?php echo anchor("home/BaseForm?baseForm={$_GET['baseForm']}&inflection=0","Base Form",["class"=>"col-md-3 btn btn-default","title" => "Add Baseform"]); ?>
-                                    <?php echo anchor("home/Translation?baseForm={$_GET['baseForm']}&term={$_GET['term']}&translation=0","Translation",["class"=>"col-md-4 col-md-offset-1 btn btn-primary","title" => "Add Translation"]); ?>
-                                </div>
-                            </div>
-                            <table class="table table-striped table-hover ">
-                                <thead>
-                                    <tr>
-                                      <th>#</th>
-                                      <th>Term</th>
-                                      <th>Glossary Entry</th>
-                                      <!--<th>Common Usage</th>-->
-                                      <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $count = 1;
-                                            if(count($Terms)): ?>
-                                        <?php foreach($Terms as $Term) { ?>
-                                            <tr>
-                                                <td><?php echo $count++; ?></td>
-                                                <td><a style="cursor:pointer" data-value ="<?php echo $Term->TermID; ?>" onclick="insertParam(this,'term')"><?php echo $Term->TermName; ?></a>
-                                                <!--<?php echo anchor("",$Term->TermName,array('data-value' => '{$Term->TermID}', 'onclick' => "insertParam(this,'term')"));?>--></td>
-                                                <td><?php echo $Term->GlossaryEntry; ?></td>
-                                                <!--<td><?php echo $Term->CommonUsage; ?></td>-->
-                                                <td><?php echo anchor("home/delete_term/{$Term->TermID}/term/TermID/0/{$_GET['baseForm']}","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>
-                                            </tr>
-                                        <?php } else: ?>
-                                            <tr>No Records Found!</tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
+        </div>
+        <div class="col-md-7" style="display:<?php echo $display; ?>;">
+            <?php echo anchor("home/Translation?term={$_GET['term']}&translation=0","Add translation",["class"=>"col-md-3 btn btn-default"]); ?>
+            <table class="table table-striped table-hover ">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Translation</th>
+                        <th>Language</th>
+                        <th>Faux Amis</th>
+                        <th>Comment</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        <?php $count = 1;
+                        if(count($Translations)): ?>
+                            <?php foreach($Translations as $Translation) { ?>
+                            <tr>
+                                <td><?php echo $count++; ?></td>
+                                <td><?php echo anchor("home/Translation?term={$_GET['term']}&translation={$Translation->TranslationID}", $Translation->Translation); ?></td>
+                                <td><?php echo $Translation->Language; ?></td>
+                                <td><?php echo $Translation->FauxAmis; ?></td>
+                                <td><?php echo $Translation->Comment; ?></td>
+                                <td><?php echo anchor("home/delete_translation/{$Translation->TranslationID}/{$Translation->FKTermID}","<i class='glyphicon glyphicon-remove'></i>",["class"=>"btn btn-danger btn-xs round","onclick" => "return confirm('Are you sure you want delete?')"]); ?></td>
+                            </tr>
+                            <?php } else: ?>
+                            <tr><br><br>No Records Found!</tr>
+                        <?php endif; ?>
+                    </tbody>
+            </table>
+        </div>
                     <br>
     </div>
 
@@ -212,61 +216,6 @@
             }
         }
     ?>
-
-    <script>
-        function getval(sel,method,variable)
-        {
-            var base_url = "<?php echo base_url(); ?>"
-            location.replace(base_url + 'index.php/home/' + method + '?' + variable + '=' + sel.value);
-        }
-
-        function insertParam(sel, variable)
-        {
-            var kvp = document.location.search.substr(1).split('&');
-            key = encodeURI(variable);
-
-            if(variable == 'term')
-            {
-                value = $(sel).data("value");
-            }
-            else
-            {
-                value = sel.value;
-
-                key2 = 'term';
-                value2 = 0;
-
-                var i=kvp.length; var x; while(i--) 
-                {
-                    x = kvp[i].split('=');
-
-                    if (x[0]==key2)
-                    {
-                        x[1] = value2;
-                        kvp[i] = x.join('=');
-                        break;
-                    }
-                }
-            }
-
-            var i=kvp.length; var x; while(i--) 
-            {
-                x = kvp[i].split('=');
-
-                if (x[0]==key)
-                {
-                    x[1] = value;
-                    kvp[i] = x.join('=');
-                    break;
-                }
-            }
-
-            if(i<0) {kvp[kvp.length] = [key,value].join('=');}
-
-            //this will reload the page, it's likely better to store this until finished
-            document.location.search = kvp.join('&');
-        }
-    </script>
 
 <?php include('footer.php'); ?>
 

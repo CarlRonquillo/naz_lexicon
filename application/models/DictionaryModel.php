@@ -68,7 +68,7 @@
 			return $query->result();
 		}
 
-		public function search_get_baseform($Searched_term,$languageID)
+		/*public function search_get_baseform($Searched_term,$languageID)
 		{
 			$this->db->select('baseform.BaseName,baseform.BaseFormID');
 			$this->db->from('term');
@@ -88,13 +88,13 @@
 			{
 				return $query->row_array();
 			}
-		}
+		}*/
 
 		public function search_existing_term($Searched_term)
 		{
 			$this->db->select('term.TermID,term.TermName,term.GlossaryEntry');
 			$this->db->from('term');
-			$this->db->join('termhasbaseform', 'termhasbaseform.FKTermID = term.TermID');
+			$this->db->join('termrelatestoterm', 'termrelatestoterm.FKTermID = term.TermID');
 			$this->db->like('term.TermName',$Searched_term);
 			$this->db->where('term.Deleted', 0);
 			$query = $this->db->get();
@@ -106,11 +106,9 @@
 
 		public function termExists($Searched_term,$languageID)
 		{
-			$this->db->select('term.TermID,baseform.BaseFormID');
+			$this->db->select('term.TermID');
 			$this->db->from('term');
-			$this->db->join('termhasbaseform', 'termhasbaseform.FKTermID = term.TermID');
-			$this->db->join('baseform', 'baseform.BaseFormID = termhasbaseform.FKBaseValueID');
-			$this->db->join('translation', 'translation.FKTermID = term.TermID');
+			$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
 			$this->db->where('term.TermName',$Searched_term);
 			$this->db->where('term.Deleted', 0);
 			$query = $this->db->get();
@@ -143,25 +141,21 @@
 			}
 		}
 
-		public function get_term($baseFormID,$languageID,$searched_item)
+		public function get_term($languageID,$searched_item)
 		{
 			$this->db->select('*');
-			$this->db->from('baseform');
-			$this->db->join('termhasbaseform', 'termhasbaseform.FKBaseValueID = baseform.BaseFormID');
-			$this->db->join('term', 'term.TermID = termhasbaseform.FKTermID');
+			$this->db->from('term');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
 			$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
 			$this->db->join('languages', 'languages.LanguageID = translation.FKLanguageID','inner');
-			$this->db->where('baseform.BaseFormID',$baseFormID);
 			$this->db->where('languages.LanguageID', $languageID);
 			$this->db->where('term.TermName', $searched_item);
-			$this->db->where('baseform.Deleted', 0);
             $this->db->where('translation.Deleted', 0);
 			$query = $this->db->get();
 			if($query->num_rows() > 0)
 			{
-				return $query->result();
+				return $query->row();
 			}
 		}
 
@@ -175,18 +169,9 @@
 
 		    	if(isset($termID))
 			    {
-			    	$this->db->where('FKLanguageID',$languageID)->where('FKTermID',$termID);
+			    	$this->db->where('FKLanguageID',$languageID)->where('FKTermID',$termID)->where('Deleted',0);
 				    $query = $this->db->get('translation');
-				    if ($query->num_rows() > 0)
-				    {
-				    	$this->db->where('FKTermID',$termID);
-					    $query = $this->db->get('termhasbaseform');
-					    if ($query->num_rows() <= 0)
-					    {
-					        return '3';
-					    }
-				    }
-				    else
+				    if ($query->num_rows() < 1)
 				    {
 				    	return '2';
 				    }
@@ -220,28 +205,26 @@
 			}
 		}
 
-		public function related_words_ID($baseFormID,$languageID)
+		public function related_words_ID($termID,$languageID)
 		{
-			$this->db->select('TermID');
-			$this->db->from('baseform');
-			$this->db->join('termhasbaseform', 'termhasbaseform.FKBaseValueID = baseform.BaseFormID');
-			$this->db->join('term', 'term.TermID = termhasbaseform.FKTermID');
-			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
+			$this->db->select('FKTermIDChild');
+			$this->db->from('term');
+			$this->db->join('termrelatestoterm', 'term.TermID = termrelatestoterm.FKTermIDParent','inner');
 			$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
 			$this->db->join('languages', 'languages.LanguageID = translation.FKLanguageID','inner');
-			$this->db->where('baseform.BaseFormID',$baseFormID);
 			$this->db->where('languages.LanguageID', $languageID);
-			$this->db->where('baseform.Deleted', 0);
+			$this->db->where('term.Deleted', 0);
+			$this->db->where('term.TermID', $termID);
 			$subQuery  =  $this->db->get_compiled_select();
 
-			$this->db->select('FKTermIDChild')->from('termrelatestoterm');
+			/*$this->db->select('FKTermIDChild')->from('termrelatestoterm');
 			$this->db->join('translation', 'translation.FKTermID = termrelatestoterm.FKTermIDChild AND translation.FKLanguageID = '.$languageID);
 			$this->db->where('FKTermIDParent IN ('.$subQuery.')', NULL, FALSE);
-			$subQuery2  =  $this->db->get_compiled_select();
+			$subQuery2  =  $this->db->get_compiled_select();*/
 
 			$this->db->select('TermName,TermID');
 			$this->db->from('term');
-			$this->db->where('TermID IN ('.$subQuery2.')', NULL, FALSE);
+			$this->db->where('TermID IN ('.$subQuery.')', NULL, FALSE);
 			$query = $this->db->get();
 			if($query->num_rows() > 0)
 			{
@@ -249,16 +232,13 @@
 			}
 		}
 
-		public function get_Terms_forAdd($baseFormID)
+		public function get_Terms_forAdd()
 		{
 			$this->db->select('*');
-			$this->db->from('baseform');
-			$this->db->join('termhasbaseform', 'termhasbaseform.FKBaseValueID = baseform.BaseFormID');
-			$this->db->join('term', 'term.TermID = termhasbaseform.FKTermID');
+			$this->db->from('term');
+			//$this->db->join('termrelatestoterm', 'term.TermID = termrelatestoterm.FKTermID');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
-			$this->db->where('baseform.BaseFormID',$baseFormID);
-			$this->db->where('baseform.Deleted', 0);
 			$this->db->where('term.Deleted', 0);
 			$query = $this->db->get();
 			if($query->num_rows() > 0)
@@ -267,10 +247,10 @@
 			}
 		}
 
-		public function get_Terms_forTermHasBase($baseFormID)
+		/*public function get_Terms_forTermHasBase($baseFormID)
 		{
 			$this->db->select('*');
-			$this->db->from('baseform');
+			$this->db->from('term');
 			$this->db->join('termhasbaseform', 'termhasbaseform.FKBaseValueID = baseform.BaseFormID');
 			$this->db->join('term', 'term.TermID = termhasbaseform.FKTermID');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
@@ -281,7 +261,7 @@
 			{
 				return $query->result();
 			}
-		}
+		}*/
 
 		public function get_SingleTerm($termID)
 		{
@@ -320,13 +300,12 @@
 
 		public function get_terms($languageID)
 		{
-			$this->db->select("*,(select GROUP_CONCAT(BaseName SEPARATOR ', ') from baseform a
+			/*$this->db->select("*,(select GROUP_CONCAT(BaseName SEPARATOR ', ') from baseform a
 							Inner join termhasbaseform b ON b.FKBaseValueID = a.BaseFormID
 							left join term c ON c.TermID = b.FKTermID
-							where c.TermID = term.TermID) as Basenames");
+							where c.TermID = term.TermID) as Basenames");*/
+			$this->db->select('*');
 			$this->db->from('term');
-			$this->db->join('termhasbaseform', 'termhasbaseform.FKTermID = term.TermID','left');
-			$this->db->join('baseform', 'baseform.BaseFormID = termhasbaseform.FKBaseValueID','left');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
 			$this->db->join('translation', 'translation.FKTermID = term.TermID AND translation.Deleted = 0 AND translation.FKLanguageID = '.$languageID,'left');
@@ -344,13 +323,12 @@
 
 		public function search_terms($searched_item,$languageID)
 		{
-			$this->db->select("*,(select GROUP_CONCAT(BaseName SEPARATOR ', ') from baseform a
+			/*$this->db->select("*,(select GROUP_CONCAT(BaseName SEPARATOR ', ') from baseform a
 							Inner join termhasbaseform b ON b.FKBaseValueID = a.BaseFormID
 							left join term c ON c.TermID = b.FKTermID
-							where c.TermID = term.TermID) as Basenames");
+							where c.TermID = term.TermID) as Basenames");*/
+			$this->db->select('*');
 			$this->db->from('term');
-			$this->db->join('termhasbaseform', 'termhasbaseform.FKTermID = term.TermID','left');
-			$this->db->join('baseform', 'baseform.BaseFormID = termhasbaseform.FKBaseValueID','left');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
 			$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
@@ -448,15 +426,15 @@
 			}
 		}
 
-		public function save_term($data,$baseID)
+		public function save_term($data)
 		{
 			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry']);
 			$this->db->insert('term',$term);
 
 			$TermID = $this->db->insert_id();
 
-			$termhasbaseform = array('FKBaseValueID' => $baseID,'FKTermID' => $TermID);
-			$this->db->insert('termhasbaseform',$termhasbaseform);
+			//$termhasbaseform = array('FKBaseValueID' => $baseID,'FKTermID' => $TermID);
+			//$this->db->insert('termhasbaseform',$termhasbaseform);
 
 			$essay = array('Title' => $data['Title'],'DocumentReference' => $data['DocumentReference'], 'FKTermID' => $TermID, 'Note' => $data['Note'], 'ManualReference' => $data['ManualReference']);
 			$this->db->insert('essay',$essay);
@@ -608,7 +586,7 @@
 			}
 		}
 
-		public function get_Singletranslations($translationID)
+		public function get_Singletranslation($translationID)
 		{
 			$this->db->select('*');
 			$this->db->from('translation');

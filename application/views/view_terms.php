@@ -4,12 +4,10 @@
         (null !== ($this->session->userdata('language_set')) ? $DefaultLanguage = $this->session->userdata('language_set') : $DefaultLanguage = 1);
     ?>
 
-	<div id="container" style ="width:63%;margin:auto;">
+	<div id="container" style ="width:55%;margin:auto;">
 		<div class="row">
-			<div class="col-md-2">
-				<?php echo anchor("home/BaseForm?baseForm=0&inflection=0","Add to Vocabulary",["class"=>"btn btn-primary btn-sm"]); ?>
-			</div>
-			<div class="autocomplete_container col-md-4">
+			<br>
+			<div class="autocomplete_container col-md-10 col-md-offset-1">
 				<?php echo form_open("home/Terms",['class' => 'form','method' => 'get','id' => 'frm_dictionary']); ?>
 					<div class="input-group">
 						<?php echo form_input(['type' => 'text','name' => 'search','id' => 'search', 'class' => 'form-control',
@@ -19,7 +17,10 @@
 						</span>
 					</div>
 			</div>
-			<div class="form-group col-md-5">
+		</div>
+		<br>
+		<div class="row col-md-offset-1">
+			<div class="form-group col-md-7">
 			    <div class="form-group">
 				    <label for="Language" class="col-md-3 control-label">Set target language:</label>
 				    <div class="col-md-9">
@@ -36,8 +37,10 @@
 			</div>
 			<div class="col-md-1">
 				<?php echo anchor("home/Terms?Language={$this->session->userdata('language_set')}","<i class='glyphicon glyphicon-refresh'></i>",["class"=>"btn btn-success round",'title' => 'Clear Search']); ?>
-			</div>			
-			<div class="col-md-2"></div>
+			</div>
+			<div class="col-md-2">
+				<?php echo anchor("home/Term?term=0","Add New Term",["class"=>"btn btn-primary btn-sm"]); ?>
+			</div>
 			<?php echo form_close(); ?>
 		</div>
 		<br>
@@ -60,9 +63,6 @@
 				      <th>#</th>
 				      <th>Term</th>
 				      <th>Translation</th>
-				      <th>Base Forms</th>
-				      <th>Glossary Entry</th>
-				      <th>Reference</th>
 				    </tr>
 			 	</thead>
 			 	<tbody>
@@ -71,20 +71,17 @@
 	  					<?php foreach($terms as $term) { ?>
 			    			<tr>
 			    				<td><?php echo $count++; ?></td>
-			    				<td><?php echo anchor("home/Translation?baseForm={$term->BaseFormID}&term={$term->TermID}&translation={$term->TranslationID}",$term->TermName);?></td>
+			    				<td><?php echo anchor("home/Term?term={$term->TermID}",$term->TermName);?></td>
 			    				<td>
 			    					<?php if(!empty($term->Translation))
 			    					{
-			    						echo $term->Translation;
+			    						echo anchor("home/Translation?term={$term->TermID}&translation={$term->TranslationID}","<b>".$term->Translation."</b>");
 			    					}
 			    					else
 			    					{
-			    						echo anchor("home/Translation?baseForm={$term->BaseFormID}&term={$term->TermID}&translation=0","<i>add translation here</i>");
+			    						echo anchor("home/Translation?term={$term->TermID}&translation=0","<i>-add translation here-</i>");
 			    					} ?>
 			    				</td>
-			    				<td><?php echo $term->Basenames; ?></td>
-			    				<td><?php echo $term->GlossaryEntry; ?></td>
-			    				<td><?php echo $term->DocumentReference; ?></td>
 			    			</tr>
 						<?php } else: ?>
 							<tr>No Record/s Found! <?php echo (isset($prompt) ? $prompt : ''); ?></tr>
@@ -116,32 +113,15 @@
 	} );
 
 	function insertParam(sel, variable)
-        {
-            var kvp = document.location.search.substr(1).split('&');
-            key = encodeURI(variable);
+		{
+		    key = encodeURI(variable);
+		    value = encodeURI(sel.value);
 
-            if(variable == 'term')
+            var kvp = document.location.search.substr(1).split('&');
+
+            if(key == 'translation')
             {
                 value = $(sel).data("value");
-            }
-            else
-            {
-                value = sel.value;
-
-                key2 = 'term';
-                value2 = 0;
-
-                var i=kvp.length; var x; while(i--) 
-                {
-                    x = kvp[i].split('=');
-
-                    if (x[0]==key2)
-                    {
-                        x[1] = value2;
-                        kvp[i] = x.join('=');
-                        break;
-                    }
-                }
             }
 
             var i=kvp.length; var x; while(i--) 
@@ -156,9 +136,28 @@
                 }
             }
 
-            if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+            /*if(key != 'term')
+            {
+                key2 = 'term';                      
+                value2 = <?php echo $first_TermID; ?>;
 
-            //this will reload the page, it's likely better to store this until finished
-            document.location.search = kvp.join('&');
-        }
+                //term change!!!!!!!!!!!!
+                var i=kvp.length; var x; while(i--) 
+                {
+                    x = kvp[i].split('=');
+
+                    if (x[0]==key2)
+                    {
+                        x[1] = value2;
+                        kvp[i] = x.join('=');
+                        break;
+                    }
+                }
+            }*/
+
+		    if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+
+		    //this will reload the page, it's likely better to store this until finished
+		    document.location.search = kvp.join('&');
+		}
 </script>
