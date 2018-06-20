@@ -118,31 +118,38 @@ class Home extends CI_Controller {
 
 	public function update_Account($user_id)
 	{
-		$this->form_validation->set_rules('FirstName', 'First name', 'required');
-		$this->form_validation->set_rules('Username', 'Username', 'required');
-		$this->form_validation->set_rules('Password', 'Password', 'required');
-		$this->form_validation->set_rules('PassConf', 'Password Confirmation', 'required|matches[Password]');
-		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
-		$this->load->model('DictionaryModel');
-		$data = $this->input->post();
+		if(!empty($this->session->userdata('Username')))
+		{
+			$this->form_validation->set_rules('FirstName', 'First name', 'required');
+			$this->form_validation->set_rules('Username', 'Username', 'required');
+			$this->form_validation->set_rules('Password', 'Password', 'required');
+			$this->form_validation->set_rules('PassConf', 'Password Confirmation', 'required|matches[Password]');
+			$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
+			$this->load->model('DictionaryModel');
+			$data = $this->input->post();
 
-		if ($this->form_validation->run())
-        {
-        	unset($data['PassConf']);
-        	if($this->DictionaryModel->updateAccount($data,$user_id))
+			if ($this->form_validation->run())
 	        {
-	           	$this->session->set_flashdata('response','Record successfully updated.');
+	        	unset($data['PassConf']);
+	        	if($this->DictionaryModel->updateAccount($data,$user_id))
+		        {
+		           	$this->session->set_flashdata('response','Record successfully updated.');
 
-	           	$session_data = $this->DictionaryModel->user_details($data['Username'],$data['Password']);
-        		$this->session->set_userdata($session_data);
+		           	$session_data = $this->DictionaryModel->user_details($data['Username'],$data['Password']);
+	        		$this->session->set_userdata($session_data);
+		        }
+		        else
+		        {
+					$this->session->set_flashdata('response','Record was not updated.');
+		        }
 	        }
-	        else
-	        {
-				$this->session->set_flashdata('response','Record was not updated.');
-	        }
-        }
 
-        $this->EditAccount($user_id);
+	        $this->EditAccount($user_id);
+   		}
+   		else
+		{
+			$this->Logout();
+		}
 	}
 
 	public function save_suggestedTerm($TermID)
@@ -170,132 +177,100 @@ class Home extends CI_Controller {
 
 	public function Terms()
 	{
-		$this->load->model('DictionaryModel');
-		$searched_item = $this->input->get('search');
-		$language_id = $this->input->get('Language');
-
-		if(!empty($searched_item))
+		if(!empty($this->session->userdata('Username')))
 		{
-			$data['terms'] = $this->DictionaryModel->search_terms($searched_item,$language_id);
-			$laguage_set['language_set'] = $language_id;
-			$this->session->set_userdata($laguage_set);
+			$this->load->model('DictionaryModel');
+			$searched_item = $this->input->get('search');
+			$language_id = $this->input->get('Language');
 
-			$TermExists = $this->DictionaryModel->termExists($searched_item,$language_id);
-			if(!empty($TermExists))
+			if(!empty($searched_item))
 			{
-				$data['prompt'] = anchor("home/Translation?term={$TermExists['TermID']}&translation=0","<i>Add translation here</i>");
+				$data['terms'] = $this->DictionaryModel->search_terms($searched_item,$language_id);
+				$laguage_set['language_set'] = $language_id;
+				$this->session->set_userdata($laguage_set);
+
+				$TermExists = $this->DictionaryModel->termExists($searched_item,$language_id);
+				if(!empty($TermExists))
+				{
+					$data['prompt'] = anchor("home/Translation?term={$TermExists['TermID']}&translation=0","<i>Add translation here</i>");
+				}
 			}
+			else
+			{
+				$data['terms'] = $this->DictionaryModel->get_terms($language_id);
+				$laguage_set['language_set'] = $language_id;
+				$this->session->set_userdata($laguage_set);
+			}
+			
+			$data['languages'] = $this->DictionaryModel->get_languages();
+			$data['termNames'] = $this->DictionaryModel->get_TermNames();
+			$data['searched'] = $searched_item;
+
+			$this->load->view('view_terms',$data);
 		}
 		else
 		{
-			$data['terms'] = $this->DictionaryModel->get_terms($language_id);
-			$laguage_set['language_set'] = $language_id;
-			$this->session->set_userdata($laguage_set);
+			$this->Logout();
 		}
-		
-		$data['languages'] = $this->DictionaryModel->get_languages();
-		$data['termNames'] = $this->DictionaryModel->get_TermNames();
-		$data['searched'] = $searched_item;
-
-		$this->load->view('view_terms',$data);
-	}
-
-	public function BaseForm()
-	{
-		$this->load->model('DictionaryModel');
-		$baseID = $this->input->get('baseForm');
-		$inflectionID = $this->input->get('inflection');
-		$data['Inflections'] = $this->DictionaryModel->get_inflections($baseID);
-		$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
-		$data['partofspeech'] = $this->DictionaryModel->get_partofspeech();
-		//$data['Baseform'] = $this->DictionaryModel->get_BaseForm($baseID);
-		$data['record'] = $this->DictionaryModel->get_Singleinflection($inflectionID);
-		//$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
-		$this->load->view('add_baseform',$data);
 	}
 
 	public function Term()
 	{
-		$this->load->model('DictionaryModel');
-		//$baseID = $this->input->get('baseForm');
-		$termID = $this->input->get('term');
-		
-		//$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd();
-		//$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
-		//$data['baseID'] = $baseID;
-		//$data['first_TermID'] =  $this->DictionaryModel->get_first_termID($baseID);
-		$data['record'] =  $this->DictionaryModel->get_SingleTerm($termID);
-		$data['termNames'] = $this->DictionaryModel->get_TermNames();
-		$related_terms = $this->DictionaryModel->get_relatedTerms($termID);
-		$data['Translations'] = $this->DictionaryModel->get_translations($termID);
-		$data['relatedTerms'] = "";
-		if(count($related_terms))
+		if(!empty($this->session->userdata('Username')))
 		{
-			foreach($related_terms as $related)
+			$this->load->model('DictionaryModel');
+			//$baseID = $this->input->get('baseForm');
+			$termID = $this->input->get('term');
+			
+			//$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd();
+			//$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
+			//$data['baseID'] = $baseID;
+			//$data['first_TermID'] =  $this->DictionaryModel->get_first_termID($baseID);
+			$data['record'] =  $this->DictionaryModel->get_SingleTerm($termID);
+			$data['termNames'] = $this->DictionaryModel->get_TermNames();
+			$related_terms = $this->DictionaryModel->get_relatedTerms($termID);
+			$data['Translations'] = $this->DictionaryModel->get_translations($termID);
+			$data['relatedTerms'] = "";
+			if(count($related_terms))
 			{
-				$data['relatedTerms'] = $data['relatedTerms'].$related->TermName.',';
+				foreach($related_terms as $related)
+				{
+					$data['relatedTerms'] = $data['relatedTerms'].$related->TermName.',';
+				}
 			}
-		}
 
-		$this->load->view('add_term',$data);
+			$this->load->view('add_term',$data);
+		}
+		else
+		{
+			$this->Logout();
+		}
 	}
 
 	public function Translation()
 	{
-		$this->load->model('DictionaryModel');
-		//$baseID = $this->input->get('baseForm');
-		$translationID = $this->input->get('translation');
-		$termID = $this->input->get('term');
+		if(!empty($this->session->userdata('Username')))
+		{
+			$this->load->model('DictionaryModel');
+			//$baseID = $this->input->get('baseForm');
+			$translationID = $this->input->get('translation');
+			$termID = $this->input->get('term');
 
-		$data['term'] = $this->DictionaryModel->get_SingleTerm($termID);
+			$data['term'] = $this->DictionaryModel->get_SingleTerm($termID);
 
-		//$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
-		$data['languages'] = $this->DictionaryModel->get_languages();
-		//$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
-		//$data['Translations'] = $this->DictionaryModel->get_translations($this->input->get('term'));
-		//$data['first_TermID'] =  $this->DictionaryModel->get_first_termID($baseID);
-		$data['record'] =  $this->DictionaryModel->get_Singletranslation($translationID);
-		//$data['baseID'] = $baseID;
-		$this->load->view('add_translation',$data);
-	}
-
-	public function save_BaseName($baseID)
-	{
-		$this->form_validation->set_rules('BaseName','Base Form','required');
-		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
-		$this->load->model('DictionaryModel');
-		$data = $this->input->post();
-		$isUpdate = $data['saveBaseName'];
-		if ($this->form_validation->run())
-        {
-        	if($isUpdate)
-        	{
-        		if($this->DictionaryModel->update_basename($data,$baseID))
-	            {
-	            	$this->session->set_flashdata('response',$data['BaseName'].' successfully updated.');
-	            }
-	            else
-	            {
-					$this->session->set_flashdata('response',$data['BaseName'].' was not updated.');
-	            }
-	            $baseForm = $baseID;
-        	}
-        	else
-        	{
-        		unset($data['saveBaseName']);
-				if($this->DictionaryModel->saveRecord($data,'baseform'))
-	            {
-	            	$this->session->set_flashdata('response',$data['BaseName'].' successfully saved.');
-	            }
-	            else
-	            {
-					$this->session->set_flashdata('response',$data['BaseName'].' was not saved.');
-	            }
-	            $baseForm = $this->DictionaryModel->get_latestID('baseform','BaseFormID');
-        	}
-        }
-
-        return redirect("home/BaseForm?baseForm={$baseForm}&inflection=0");
+			//$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
+			$data['languages'] = $this->DictionaryModel->get_languages();
+			//$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
+			//$data['Translations'] = $this->DictionaryModel->get_translations($this->input->get('term'));
+			//$data['first_TermID'] =  $this->DictionaryModel->get_first_termID($baseID);
+			$data['record'] =  $this->DictionaryModel->get_Singletranslation($translationID);
+			//$data['baseID'] = $baseID;
+			$this->load->view('add_translation',$data);
+		}
+		else
+		{
+			$this->Logout();
+		}
 	}
 
 	public function save_suggestTranslation($searchedTerm,$translationID)

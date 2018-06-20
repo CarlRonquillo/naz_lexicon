@@ -23,6 +23,7 @@
                 $ContextValue = "";
                 $Note = "";
                 $ManualReference = "";
+                $relatedTerms ="";
             }
 
             if($_GET['term'] == 0)
