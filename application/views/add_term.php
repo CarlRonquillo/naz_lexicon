@@ -58,7 +58,7 @@
             endif;
         ?>
         <div class="well col-md-5  <?php echo $center; ?>">
-            <?php echo form_open("home/save_Term/{$_GET['term']}",['class' => 'form-horizontal','name' => '']); ?>
+            <?php echo form_open("home/save_Term/{$_GET['term']}",['class' => 'form-horizontal','id' => 'frm_dictionary']); ?>
             <fieldset>
             <!--<div class="row">
                 <div class="form-group">
@@ -168,9 +168,10 @@
                                         <div class="form-group">
                                             <label for="RelatedTerms" class="col-lg-3 control-label">Related Terms</label>
                                             <div class="col-lg-8">
-                                                <!--<?php echo form_input(['name' => 'RelatedTerms', 'class' => 'form-control','id' => 'ms1']); ?>-->
-                                                <?php echo form_input(['name' => 'RelatedTerms', 'class' => 'form-control','id' => 'RelatedTerms','value' => $relatedTerms]); ?>
-                                                <?php echo form_input(['name' => 'DeletedTerms', 'class' => 'form-control','id' => 'DeletedTerms']); ?>
+                                                <?php echo anchor("home/Related_Terms?term={$_GET['term']}",$relatedTerms); ?>
+                                                <!--<?php echo form_input(['name' => 'RelatedTerms', 'class' => 'form-control','id' => 'ms1']); ?>
+                                                <?php echo form_input(['name' => 'RelatedTerms', 'class' => 'form-control','id' => 'RelatedTerms','value' => $relatedTerms,'readonly' => 'true']); ?>
+                                                <?php echo form_input(['name' => 'DeletedTerms', 'class' => 'form-control','id' => 'DeletedTerms']); ?>-->
                                             </div>
                                         </div>
                                     </div>
@@ -236,8 +237,7 @@
     $(function(){
         $("#RelatedTerms").tags({
             requireData: true,
-            unique: true,
-            deletedInput: 'DeletedTerms'
+            unique: true
         }).autofill({
             data:<?php if(isset($terms)) {echo json_encode(array_values($terms));} ?>
         })

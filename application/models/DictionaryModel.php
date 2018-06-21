@@ -387,6 +387,21 @@
 			}
 		}
 
+		public function isRelatedTermExist($termID,$searchTermID)
+		{
+			$this->db->where('termrelatestoterm.FKTermIDParent',$termID);
+			$this->db->where('termrelatestoterm.FKTermIDChild',$searchTermID);
+			$query = $this->db->get('termrelatestoterm');
+			if($query->num_rows() > 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		public function save_inflection($inflectionName,$baseID,$partofspeech)
 		{
 			$data = array('InflectionName' => $inflectionName);

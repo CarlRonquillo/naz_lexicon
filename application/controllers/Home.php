@@ -235,7 +235,7 @@ class Home extends CI_Controller {
 			{
 				foreach($related_terms as $related)
 				{
-					$data['relatedTerms'] = $data['relatedTerms'].$related->TermName.',';
+					$data['relatedTerms'] = $data['relatedTerms'].$related->TermName.', ';
 				}
 			}
 
@@ -552,16 +552,15 @@ class Home extends CI_Controller {
 		$this->load->view('existing_term',$data);
 	}
 
-	public function Existing_Term()
+	public function Related_Terms()
 	{
+		$termID = $this->input->get('term');
 		$this->load->model('DictionaryModel');
-		$baseID = $this->input->get('baseForm');
-		
-		$data['Terms'] = $this->DictionaryModel->get_Terms_forAdd($baseID);
-		$data['Base_Names'] =  $this->DictionaryModel->get_BaseNames();
+		$data['term'] = $this->DictionaryModel->get_SingleTerm($termID);
+		$data['RelatedTerms'] = $this->DictionaryModel->get_relatedTerms($termID);
 		$data['termNames'] = $this->DictionaryModel->get_TermNames();
 
-		$this->load->view('existing_term',$data);
+		$this->load->view('related_terms',$data);
 	}
 
 	public function add_BaseformHasTerm($termID,$baseID,$searchTerm)
@@ -588,6 +587,61 @@ class Home extends CI_Controller {
 		}
 
 		return redirect("home/existing_term_search?search={$searchTerm}&baseForm={$baseID}");
+	}
+
+	public function save_relatedterm($termID)
+	{
+		$this->load->model('DictionaryModel');
+		$searchTerm = $this->input->get('search');
+		$SearchTerm_ID = $this->DictionaryModel->get_TermID($searchTerm);
+
+		if(isset($SearchTerm_ID) && $SearchTerm_ID != 0)
+		{
+			if(!$this->DictionaryModel->isRelatedTermExist($termID,$SearchTerm_ID))
+			{
+				$data['FKTermIDParent'] = $termID;
+				$data['FKTermIDChild'] = $SearchTerm_ID;
+				if($this->DictionaryModel->saveRecord($data,'termrelatestoterm'))
+			    {
+			        $this->session->set_flashdata('response','Record successfully saved.');
+			    }
+			    else
+			    {
+					$this->session->set_flashdata('response','Record was not saved.');
+				}
+			}
+			else
+			{
+				$this->session->set_flashdata('class','text-danger');
+				$this->session->set_flashdata('response','Record was not saved. Record already exist!');
+			}
+		}
+		else
+		{
+			$this->session->set_flashdata('class','text-danger');
+			$this->session->set_flashdata('response',"Record was not saved. Searched term doesn't exist!");
+		}
+
+		return redirect("home/Related_Terms?term={$termID}");
+	}
+
+	public function delete_RelatedTerm($ParentID,$ChildID)
+	{
+		$this->load->model('DictionaryModel');
+
+		$data['FKTermIDParent'] = $ParentID;
+		$data['FKTermIDChild'] = $ChildID;
+
+		if($this->DictionaryModel->permanent_del($data,'termrelatestoterm'))
+	    {
+	        $this->session->set_flashdata('response','Record successfully deleted.');
+	    }
+	    else
+	    {
+			$this->session->set_flashdata('response','Record was not deleted.');
+		}
+
+		return redirect("home/Related_Terms?term={$ParentID}");
 	}
 
 	public function delete_BaseformHasTerm($termID,$baseID,$searchTerm)
