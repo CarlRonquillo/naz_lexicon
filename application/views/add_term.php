@@ -10,6 +10,7 @@
                 $Title = $record->Title;
                 $DocumentReference = $record->DocumentReference;
                 $ContextValue = $record->ContextValue;
+                $FauxAmis = $record->term_FauxAmis;
                 $Note= $record->Note;
                 $ManualReference = $record->ManualReference;
             }
@@ -21,6 +22,7 @@
                 $Title = "";
                 $DocumentReference = "";
                 $ContextValue = "";
+                $FauxAmis = "";
                 $Note = "";
                 $ManualReference = "";
                 $relatedTerms ="";
@@ -131,6 +133,16 @@
                                                     'autocomplete' => 'off','maxlength' => 30],$ManualReference); ?>
                                             </div>
                                             <span><?php echo form_error('ManualReference') ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label for="FauxAmis" class="col-lg-3 control-label">Faux Amis</label>
+                                            <div class="col-lg-8">
+                                                <?php echo form_input(['type' => 'text','name' => 'FauxAmis', 'class' => 'form-control',
+                                                    'autocomplete' => 'off','maxlength' => 30],$FauxAmis); ?>
+                                            </div>
+                                            <span><?php echo form_error('FauxAmis') ?></span>
                                         </div>
                                     </div>
                                     <div class="row">

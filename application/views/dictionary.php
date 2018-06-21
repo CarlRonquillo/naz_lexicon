@@ -93,12 +93,16 @@
 					        <p><i>Ref: </i><?php echo $_record->DocumentReference; ?></p>
 				        <?php } ?>
 
-				        <?php if(!empty($_record->ContextValue)) { ?>
-					        <p><i>Context: </i><?php echo $_record->ContextValue; ?></p>
+				        <?php if(!empty($_record->ManualReference)) { ?>
+					        <p><i>2017 Manual Ref: </i><?php echo $_record->ManualReference; ?></p>
 				        <?php } ?>
 
-				        <?php if(!empty($_record->FauxAmis)) { ?>
-					        <p><i>Faux Amis: </i><?php echo $_record->FauxAmis; ?></p>
+				        <?php if(!empty($_record->term_FauxAmis)) { ?>
+					        <p><i>Faux Amis: </i><?php echo $_record->term_FauxAmis." (".$_record->TermName.") | ".$_record->FauxAmis." (".$_record->Translation.")"; ?></p>
+				        <?php } ?>
+
+				        <?php if(!empty($_record->ContextValue)) { ?>
+					        <p><i>Context: </i><?php echo $_record->ContextValue; ?></p>
 				        <?php } ?>
 
 				        <?php if(!empty($_record->Note)) { ?>

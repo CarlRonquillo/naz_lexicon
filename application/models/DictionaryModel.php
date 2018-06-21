@@ -142,7 +142,7 @@
 
 		public function get_term($languageID,$searched_item)
 		{
-			$this->db->select('*');
+			$this->db->select('*,term.FauxAmis as term_FauxAmis');
 			$this->db->from('term');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
@@ -264,7 +264,7 @@
 
 		public function get_SingleTerm($termID)
 		{
-			$this->db->select('*');
+			$this->db->select('*,term.FauxAmis as term_FauxAmis');
 			$this->db->from('term');
 			$this->db->join('essay', 'term.TermID = essay.FKTermID','left');
 			$this->db->join('context', 'context.FKTermID = term.TermID','left');
@@ -428,7 +428,7 @@
 
 		public function save_term($data)
 		{
-			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry'],'AddedBy' => $this->session->userdata('ID'));
+			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry'],'FauxAmis' => $data['FauxAmis'],'AddedBy' => $this->session->userdata('ID'));
 			$this->db->insert('term',$term);
 
 			$TermID = $this->db->insert_id();
@@ -468,7 +468,7 @@
 
 		public function update_term($data,$termID)
 		{
-			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry']);
+			$term = array('TermName' => $data['TermName'],'GlossaryEntry' => $data['GlossaryEntry'],'FauxAmis' => $data['FauxAmis']);
 			$this->db->where('TermID', $termID);
 			$this->db->update('term', $term); 
 
