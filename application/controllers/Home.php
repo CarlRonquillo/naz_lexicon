@@ -182,10 +182,11 @@ class Home extends CI_Controller {
 			$this->load->model('DictionaryModel');
 			$searched_item = $this->input->get('search');
 			$language_id = $this->input->get('Language');
+			$isShowAll = $this->input->get('ShowAll');
 
 			if(!empty($searched_item))
 			{
-				$data['terms'] = $this->DictionaryModel->search_terms($searched_item,$language_id);
+				$data['terms'] = $this->DictionaryModel->search_terms($searched_item,$language_id,$isShowAll);
 				$laguage_set['language_set'] = $language_id;
 				$this->session->set_userdata($laguage_set);
 
@@ -197,7 +198,7 @@ class Home extends CI_Controller {
 			}
 			else
 			{
-				$data['terms'] = $this->DictionaryModel->get_terms($language_id);
+				$data['terms'] = $this->DictionaryModel->get_terms($language_id,$isShowAll);
 				$laguage_set['language_set'] = $language_id;
 				$this->session->set_userdata($laguage_set);
 			}
@@ -237,6 +238,10 @@ class Home extends CI_Controller {
 				{
 					$data['relatedTerms'] = $data['relatedTerms'].$related->TermName.', ';
 				}
+			}
+			else
+			{
+				$data['relatedTerms'] = '<i>add related terms here.</i>';
 			}
 
 			$this->load->view('add_term',$data);

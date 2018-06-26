@@ -25,7 +25,6 @@
                 $FauxAmis = "";
                 $Note = "";
                 $ManualReference = "";
-                $relatedTerms ="";
             }
 
             if($_GET['term'] == 0)
@@ -180,7 +179,7 @@
                                         <!--<div class="col-md-1 col-md-offset-8">
                                             <a id="TermName" title="Clear Update" data-value ="0" onclick="insertParam(this,'term')" class="btn btn-primary round"><span class='btn-label'><i class='glyphicon glyphicon-refresh'></i></a>
                                         </div> -->
-                                        <?php echo anchor("home/Terms?Language={$this->session->userdata('language_set')}","Back to list",["class"=>"col-md-3 btn btn-default","title" => "View Terms"]); ?>
+                                        <?php echo anchor("home/Terms?Language={$this->session->userdata('language_set')}&ShowAll=on","Back to list",["class"=>"col-md-3 btn btn-default","title" => "View Terms"]); ?>
                                         <?php echo form_button(['type' => 'submit','content' => "SAVE", 'class' => 'col-md-3 col-md-offset-1 btn btn-primary', "title" => "Save Term"]); ?>
                                     </div>
                                 </fieldset>

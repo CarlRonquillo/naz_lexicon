@@ -297,7 +297,7 @@
 			return $query->num_rows();
 		}
 
-		public function get_terms($languageID)
+		public function get_terms($languageID,$isShowAll)
 		{
 			/*$this->db->select("*,(select GROUP_CONCAT(BaseName SEPARATOR ', ') from baseform a
 							Inner join termhasbaseform b ON b.FKBaseValueID = a.BaseFormID
@@ -312,6 +312,10 @@
 			//$this->db->or_where('translation.TranslationID IS NULL', null);
 			//$this->db->where('(translation.Deleted = 0 OR translation.Deleted IS NULL)');
 			$this->db->where('term.Deleted',0);
+			if($isShowAll == 'off')
+			{
+				$this->db->where('translation.translationID IS NULL',null,false);
+			}
 			$this->db->order_by('TermName', 'ASC');
 			$query = $this->db->get();
 			if($query->num_rows() > 0)
@@ -320,7 +324,7 @@
 			}
 		}
 
-		public function search_terms($searched_item,$languageID)
+		public function search_terms($searched_item,$languageID,$isShowAll)
 		{
 			/*$this->db->select("*,(select GROUP_CONCAT(BaseName SEPARATOR ', ') from baseform a
 							Inner join termhasbaseform b ON b.FKBaseValueID = a.BaseFormID
@@ -333,6 +337,10 @@
 			$this->db->join('translation', 'translation.FKTermID = term.TermID AND translation.Deleted = 0 AND translation.FKLanguageID = '.$languageID,'left');
 			//$this->db->join('translation', 'translation.FKTermID = term.TermID','left');
 			$this->db->where('term.Deleted',0);
+			if($isShowAll == 'off')
+			{
+				$this->db->where('translation.translationID IS NULL',null,false);
+			}
 			//$this->db->where('translation.Deleted',0);
 			//$this->db->where('translation.FKLanguageID',$languageID);
 			$this->db->like('term.TermName',$searched_item);
