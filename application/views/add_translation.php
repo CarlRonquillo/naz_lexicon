@@ -114,7 +114,7 @@
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label for="FauxAmis" class="col-lg-3 control-label">Faux Amis</label>
+                    <label for="FauxAmis" class="col-lg-3 control-label">Faux Amis (Warnings)</label>
                     <div class="col-lg-8">
                         <?php echo form_input(['type' => 'text','name' => 'FauxAmis', 'class' => 'form-control',
                                                     'autocomplete' => 'off'],$FauxAmis); ?>
