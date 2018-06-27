@@ -76,7 +76,7 @@
 				 	<div class="panel">
 					    <div class="panel-heading">
 					      	<h3>
-					          	<?php echo $_record->TermName; ?> - <i><b><?php echo $_record->Translation; ?></b></i>
+					          	<?php echo $_record->TermName; ?> - <b><?php echo $_record->Translation; ?></b>
 					     	</h3>
 					    </div>
 				    <div id="<?php echo $_record->TranslationID; ?>">

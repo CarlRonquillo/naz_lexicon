@@ -136,7 +136,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group">
-                                            <label for="FauxAmis" class="col-lg-3 control-label">Faux Amis</label>
+                                            <label for="FauxAmis" class="col-lg-3 control-label">Faux Amis (Warnings)</label>
                                             <div class="col-lg-8">
                                                 <?php echo form_input(['type' => 'text','name' => 'FauxAmis', 'class' => 'form-control',
                                                     'autocomplete' => 'off','maxlength' => 30],$FauxAmis); ?>
@@ -174,19 +174,22 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <hr>
                                     <div class="row">
-                                        <?php echo anchor("home/delete_term/{$_GET['term']}/term/TermID","delete term",["class"=>"col-md-4 btn btn-label","onclick" => "return confirm('Are you sure you want delete?')","style" => "visibility:{$visibility}"]); ?>
+                                        <?php echo anchor("home/delete_term/{$_GET['term']}/term/TermID","delete term",["class"=>"col-md-3 col-md-offset-4 btn btn-label","onclick" => "return confirm('Are you sure you want delete?')","style" => "visibility:{$visibility};color:red"]); ?>
                                         <!--<div class="col-md-1 col-md-offset-8">
                                             <a id="TermName" title="Clear Update" data-value ="0" onclick="insertParam(this,'term')" class="btn btn-primary round"><span class='btn-label'><i class='glyphicon glyphicon-refresh'></i></a>
                                         </div> -->
-                                        <?php echo anchor("home/Terms?Language={$this->session->userdata('language_set')}&ShowAll=on","Back to list",["class"=>"col-md-3 btn btn-default","title" => "View Terms"]); ?>
                                         <?php echo form_button(['type' => 'submit','content' => "SAVE", 'class' => 'col-md-3 col-md-offset-1 btn btn-primary', "title" => "Save Term"]); ?>
                                     </div>
                                 </fieldset>
                             <?php echo form_close(); ?>
         </div>
         <div class="col-md-7" style="display:<?php echo $display; ?>;">
-            <?php echo anchor("home/Translation?term={$_GET['term']}&translation=0","Add translation",["class"=>"col-md-3 btn btn-default"]); ?>
+            <div class="row">
+                <?php echo anchor("home/Terms?Language={$this->session->userdata('language_set')}&ShowAll=on","Back to Terms",["class"=>"col-md-3 btn btn-label","title" => "View Terms"]); ?>
+                <?php echo anchor("home/Translation?term={$_GET['term']}&translation=0","Add translation",["class"=>"col-md-3 btn btn-primary"]); ?>
+            </div>
             <table class="table table-striped table-hover ">
                 <thead>
                     <tr>
