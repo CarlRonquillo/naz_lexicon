@@ -28,16 +28,7 @@
 				<br>
 			</div>
 			<div class="row">
-				<div class="autocomplete_container col-md-7">
-					<?php echo form_open("home/search",['class' => 'form','method' => 'get','id' => 'frm_dictionary']); ?>
-					<div class="input-group">
-						<?php echo form_input(['type' => 'text','name' => 'search','id' => 'search', 'class' => 'form-control','autocomplete' => 'off', 'placeholder' => 'Lookup','value' => $searchValue,'autofocus' => true]); ?>
-						<span class="input-group-btn">
-							<?php echo form_button(['type' => 'submit','class' => 'btn btn-default','content' => "<span class='btn-label'><i class='glyphicon glyphicon-search'></i></span>"]); ?>
-						</span>
-					</div>
-				</div>
-			    <div class="form-group col-md-5">
+				<div class="form-group col-md-5">
 			    	<div class="form-group">
 				      <label for="Language" class="col-md-4 control-label">Set target language:</label>
 				     	<div class="col-md-8">
@@ -52,6 +43,16 @@
 				    	</div>
 			    	</div>
 			    </div>
+				<div class="autocomplete_container col-md-7">
+					<?php echo form_open("home/search",['class' => 'form','method' => 'get','id' => 'frm_dictionary']); ?>
+					<div class="input-group">
+						<?php echo form_input(['type' => 'text','name' => 'search','id' => 'search', 'class' => 'form-control','autocomplete' => 'off', 'placeholder' => 'Lookup','value' => $searchValue,'autofocus' => true]); ?>
+						<span class="input-group-btn">
+							<?php echo form_button(['type' => 'submit','class' => 'btn btn-default','content' => "<span class='btn-label'><i class='glyphicon glyphicon-search'></i></span>"]); ?>
+						</span>
+					</div>
+				</div>
+
 	    	</div>
 	    	<!--<div class="row">
 		    	<div class="form-group col-md-12">
