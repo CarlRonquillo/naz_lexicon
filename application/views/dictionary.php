@@ -28,6 +28,7 @@
 				<br>
 			</div>
 			<div class="row">
+				<?php echo form_open("home/search",['class' => 'form','method' => 'get','id' => 'frm_dictionary']); ?>
 				<div class="form-group col-md-5">
 			    	<div class="form-group">
 				      <label for="Language" class="col-md-4 control-label">Set target language:</label>
@@ -44,7 +45,6 @@
 			    	</div>
 			    </div>
 				<div class="autocomplete_container col-md-7">
-					<?php echo form_open("home/search",['class' => 'form','method' => 'get','id' => 'frm_dictionary']); ?>
 					<div class="input-group">
 						<?php echo form_input(['type' => 'text','name' => 'search','id' => 'search', 'class' => 'form-control','autocomplete' => 'off', 'placeholder' => 'Lookup','value' => $searchValue,'autofocus' => true]); ?>
 						<span class="input-group-btn">
